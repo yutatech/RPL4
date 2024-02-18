@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 namespace rpl {
-namespace registers {
 
 const uint32_t CLK_BASE = 0xFE101000;
 const uint32_t CLK_SIZE = 0x000001C8;
@@ -86,7 +85,6 @@ typedef struct
   volatile uint32_t CM_EMMCDIV;	// 0x1c4
 } CLK_Typedef;
 
-}
 }
 
 #endif

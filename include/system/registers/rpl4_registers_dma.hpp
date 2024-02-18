@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 namespace rpl {
-namespace registers {
 
 const uint32_t DMA0_BASE  = 0xFE007000;
 const uint32_t DMA1_BASE  = 0xFE007100;
@@ -34,7 +33,6 @@ typedef struct
   volatile uint32_t CLKT;   // 0x1c
 } Typedf_DMA;
 
-}
 }
 
 #endif

@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 namespace rpl {
-namespace registers {
 
 const uint32_t GPIO_BASE = 0xFE200000;
 const uint32_t GPIO_SIZE = 0x000000F4;
@@ -65,7 +64,6 @@ enum class GPIO_Function : uint8_t
   ALT5   = 0b010,
 };
 
-}
 }
 
 #endif

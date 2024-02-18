@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 namespace rpl {
-namespace registers {
 
 const uint32_t PWM0_BASE = 0xFE20C000;
 const uint32_t PWM1_BASE = 0xFE20C800;
@@ -23,7 +22,6 @@ typedef struct
   volatile uint32_t DAT2;          // 0x24
 } PWM_Typedef;
 
-}
 }
 
 #endif
