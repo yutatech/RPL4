@@ -4,7 +4,6 @@
 #include <string>
 
 namespace rpl {
-namespace system {
 
 enum class MessageLevel{
     error,
@@ -15,7 +14,6 @@ enum class MessageLevel{
 void Message(std::string RPI4_Message, MessageLevel lebel);
 void Message(std::string RPI4_Message);
 
-}
 }
 
 #endif

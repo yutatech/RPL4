@@ -3,7 +3,6 @@
 #include <iostream>
 
 namespace rpl {
-namespace system {
 
 void Message(std::string message, MessageLevel lebel){
 #ifdef RPL4_DEBUG
@@ -22,5 +21,4 @@ void Message(std::string message){
     Message(message, MessageLevel::info);
 }
 
-}
 }
