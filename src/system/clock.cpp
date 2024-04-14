@@ -4,7 +4,7 @@
 
 namespace rpl {
 
-const uint8_t PASSWD = 0x5a;
+const uint32_t PASSWD = 0x5a;
 
 void SetCmCtl(volatile uint32_t &reg, volatile uint32_t data){
     reg = (PASSWD << 24) | data;
