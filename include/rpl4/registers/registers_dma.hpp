@@ -31,7 +31,7 @@ typedef struct
   volatile uint32_t DIV;    // 0x14
   volatile uint32_t DEL;    // 0x18
   volatile uint32_t CLKT;   // 0x1c
-} Typedf_DMA;
+} DMA_Typedef;
 
 }
 
