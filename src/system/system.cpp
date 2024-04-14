@@ -1,4 +1,4 @@
-#include "rpl4_system.hpp"
+#include "rpl4/system/system.hpp"
 
 #include <stdio.h>
 #include <fcntl.h>
@@ -13,8 +13,10 @@ CLK_Typedef*  REG_CLK;
 
 uint8_t Init(void){
 	int fd;
-	if ((fd = open("/dev/gpiomem", O_RDWR|O_SYNC)) < 0)
-        Message("Can't open /dev/gpiomem \n", MessageLevel::error);
+	if ((fd = open("/dev/gpiomem", O_RDWR|O_SYNC)) < 0) {
+        Log(LogLevel::Fatal, "Can't open /dev/gpiomem");
+        return -1;
+    }
 
 	REG_GPIO = (GPIO_Typedef*) mmap(NULL, GPIO_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, GPIO_BASE);
 	REG_PWM0 = (PWM_Typedef*)  mmap(NULL,  PWM_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED, fd, PWM0_BASE);

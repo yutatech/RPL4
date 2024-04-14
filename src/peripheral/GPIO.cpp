@@ -1,9 +1,9 @@
-#include "drivers/GPIO.hpp"
-#include "system/rpl4_system.hpp"
+#include "rpl4/peripheral/GPIO.hpp"
+#include "rpl4/system/system.hpp"
 
 GPIO::GPIO(uint8_t _pin, PinMode mode) : pin(_pin) {
     if (pin < 0 || 57 < pin)
-        rpl::Message("There is no GPIO" + std::to_string(pin), rpl::MessageLevel::error);
+        rpl::Log(rpl::LogLevel::Error, "There is no GPIO %d\n", pin);
 
     SetPinMode(mode);
 }

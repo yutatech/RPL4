@@ -1,5 +1,5 @@
-#include "PWM.hpp"
-#include "system/rpl4_system.hpp"
+#include "rpl4/peripheral/PWM.hpp"
+#include "rpl4/system/system.hpp"
 #include <unistd.h>
 
 PWM::PWM(uint8_t _pin, double _freq) : pin(_pin), freq(_freq) {
@@ -7,7 +7,7 @@ PWM::PWM(uint8_t _pin, double _freq) : pin(_pin), freq(_freq) {
         case 12: case 13: case 18: case 19: case 40: case 41: case 45:
             break;
         default:
-            rpl::Message("GPIO" + std::to_string(pin) + " has no PWM function", rpl::MessageLevel::error);
+            rpl::Log(rpl::LogLevel::Error, "GPIO %d has no PWM function\n", pin);
             return;
     }
 

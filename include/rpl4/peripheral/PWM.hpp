@@ -1,7 +1,7 @@
 #ifndef PWM_HPP_
 #define PWM_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 class PWM{
 private:

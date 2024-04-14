@@ -1,7 +1,7 @@
 #ifndef RPL4_CLOCK_HPP_
 #define RPL4_CLOCK_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace rpl {
 

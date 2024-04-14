@@ -1,7 +1,7 @@
 #ifndef RPL4_REGISTERS_BSC_HPP_
 #define RPL4_REGISTERS_BSC_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace rpl {
 

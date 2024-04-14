@@ -1,7 +1,7 @@
 #ifndef GPIO_HPP_
 #define GPIO_HPP_
 
-#include <stdint.h>
+#include <cstdint>
 
 enum class PinMode{
     input,

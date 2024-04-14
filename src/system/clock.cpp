@@ -1,6 +1,6 @@
-#include "rpl4_clock.hpp"
-#include "rpl4_registers.hpp"
-#include <stdint.h>
+#include "rpl4/system/clock.hpp"
+#include "rpl4/registers/registers.hpp"
+#include <cstdint>
 
 namespace rpl {
 
