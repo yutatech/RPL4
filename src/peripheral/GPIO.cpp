@@ -1,11 +1,9 @@
 #include "rpl4/peripheral/GPIO.hpp"
 #include "rpl4/system/system.hpp"
 
-GPIO::GPIO(uint8_t _pin, PinMode mode) : pin(_pin) {
+GPIO::GPIO(uint8_t _pin) : pin(_pin) {
     if (pin < 0 || 57 < pin)
         rpl::Log(rpl::LogLevel::Error, "There is no GPIO %d\n", pin);
-
-    SetPinMode(mode);
 }
 
 bool GPIO::Read(){

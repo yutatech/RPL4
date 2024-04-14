@@ -14,7 +14,7 @@ class GPIO{
 private:
     uint8_t pin;
 public:
-    GPIO(uint8_t _pin, PinMode mode);
+    GPIO(uint8_t _pin);
     bool Read();
     bool Write(bool output);
     void SetPinMode(PinMode mode);
