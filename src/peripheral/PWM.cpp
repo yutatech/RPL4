@@ -2,7 +2,7 @@
 #include "rpl4/system/system.hpp"
 #include <unistd.h>
 
-PWM::PWM(uint8_t _pin, double _freq) : pin(_pin), freq(_freq) {
+PWM::PWM(uint8_t _pin) : pin(_pin) {
     switch (pin){
         case 12: case 13: case 18: case 19: case 40: case 41: case 45:
             break;
@@ -10,7 +10,9 @@ PWM::PWM(uint8_t _pin, double _freq) : pin(_pin), freq(_freq) {
             rpl::Log(rpl::LogLevel::Error, "GPIO %d has no PWM function\n", pin);
             return;
     }
+};
 
+uint8_t PWM::Init() {
     switch (pin){
         case 12: case 13: case 40: case 41: case 45:
             rpl::SetGpioFunction(pin, rpl::GPIO_Function::ALT0);
@@ -20,9 +22,8 @@ PWM::PWM(uint8_t _pin, double _freq) : pin(_pin), freq(_freq) {
             break;
     }
 
-    SetFrequency(freq);
-
-};
+    rpl::ClockConfig(rpl::REG_CLK->CM_PWMCTL, rpl::REG_CLK->CM_PWMDIV, rpl::CLKSRC::OSC, 2.16, 1); // set pwm source clock frequency to 25MHz
+}
 
 double PWM::Write(double duty){
     uint32_t dat = clock_source * duty / freq;
@@ -48,14 +49,12 @@ double PWM::Write(double duty){
             rpl::REG_PWM1->CTL |= 0b1 << 8;
             break;
     }
-    return freq;
+    return duty;
 }
 
 double PWM::SetFrequency(double _freq){
     freq = _freq;
     uint32_t rng = clock_source / freq;
-
-    rpl::ClockConfig(rpl::REG_CLK->CM_PWMCTL, rpl::REG_CLK->CM_PWMDIV, rpl::CLKSRC::OSC, 2.16, 1); // set pwm source clock frequency to 25MHz
     
     switch (pin){
         case 12:
