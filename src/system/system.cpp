@@ -13,8 +13,8 @@ CLK_Typedef*  REG_CLK;
 
 uint8_t Init(void){
 	int fd;
-	if ((fd = open("/dev/gpiomem", O_RDWR|O_SYNC)) < 0) {
-        Log(LogLevel::Fatal, "Can't open /dev/gpiomem");
+	if ((fd = open("/dev/mem", O_RDWR|O_SYNC)) < 0) {
+        Log(LogLevel::Fatal, "Can't open /dev/mem");
         return -1;
     }
 
