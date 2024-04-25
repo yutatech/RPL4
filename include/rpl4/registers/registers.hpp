@@ -8,5 +8,6 @@
 #include "rpl4/registers/registers_gpio.hpp"
 #include "rpl4/registers/registers_pwm.hpp"
 #include "rpl4/registers/registers_spi.hpp"
+#include "rpl4/registers/registers_uart.hpp"
 
 #endif
