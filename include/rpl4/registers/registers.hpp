@@ -7,5 +7,6 @@
 #include "rpl4/registers/registers_dma.hpp"
 #include "rpl4/registers/registers_gpio.hpp"
 #include "rpl4/registers/registers_pwm.hpp"
+#include "rpl4/registers/registers_spi.hpp"
 
 #endif
