@@ -57,19 +57,19 @@ void GPIO::SetPinMode(PinMode mode){
 
     //set pullup or pulldown
     if (0 <= pin && pin <= 15) {
-        rpl::REG_GPIO->GPFSEL5 &= ~(0b11 << pin*2);
-        rpl::REG_GPIO->GPFSEL5 |= bit_pull_up_down << pin*2;
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG0 &= ~(0b11 << pin*2);
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG0 |= bit_pull_up_down << pin*2;
     }
-    if (16 <= pin && pin <= 31) {
-        rpl::REG_GPIO->GPFSEL5 &= ~(0b11 << (pin-16)*2);
-        rpl::REG_GPIO->GPFSEL5 |= bit_pull_up_down << (pin-16)*2;
+    else if (16 <= pin && pin <= 31) {
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG1 &= ~(0b11 << (pin-16)*2);
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG1 |= bit_pull_up_down << (pin-16)*2;
     }
-    if (32 <= pin && pin <= 47) {
-        rpl::REG_GPIO->GPFSEL5 &= ~(0b11 << (pin-32)*2);
-        rpl::REG_GPIO->GPFSEL5 |= bit_pull_up_down << (pin-32)*2;
+    else if (32 <= pin && pin <= 47) {
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG2 &= ~(0b11 << (pin-32)*2);
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG2 |= bit_pull_up_down << (pin-32)*2;
     }
-    if (48 <= pin && pin <= 57) {
-        rpl::REG_GPIO->GPFSEL5 &= ~(0b11 << (pin-48)*2);
-        rpl::REG_GPIO->GPFSEL5 |= bit_pull_up_down << (pin-48)*2;
+    else if (48 <= pin && pin <= 57) {
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG3 &= ~(0b11 << (pin-48)*2);
+        rpl::REG_GPIO->PUP_PDN_CNTRL_REG3 |= bit_pull_up_down << (pin-48)*2;
     }
 }
