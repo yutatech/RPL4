@@ -21,6 +21,25 @@ typedef struct
   volatile uint32_t DC;            // 0x14
 } SPI_Typedef;
 
+
+const uint32_t SPI1_BASE = 0xFE215080;
+const uint32_t SPI2_BASE = 0xFE2150C0;
+typedef struct
+{
+  volatile uint32_t CNTL0_REG;     // 0x00
+  volatile uint32_t CNTL1_REG;     // 0x04
+  volatile uint32_t STAT_REG;      // 0x08
+  volatile uint32_t PEEK_REG;      // 0x0c
+  volatile uint32_t IO_REGa;       // 0x10
+  volatile uint32_t IO_REGb;       // 0x14
+  volatile uint32_t IO_REGc;       // 0x18
+  volatile uint32_t IO_REGd;       // 0x1c
+  volatile uint32_t TXHOLD_REGa;   // 0x20
+  volatile uint32_t TXHOLD_REGb;   // 0x24
+  volatile uint32_t TXHOLD_REGc;   // 0x28
+  volatile uint32_t TXHOLD_REGd;   // 0x2c
+} AUX_SPI_Typedef;
+
 }
 
 #endif
