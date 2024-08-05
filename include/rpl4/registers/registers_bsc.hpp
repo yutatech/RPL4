@@ -9,8 +9,8 @@ const uint32_t BSC0_BASE = 0xFE205000;
 const uint32_t BSC1_BASE = 0xFE804000;
 const uint32_t BSC3_BASE = 0xFE205600;
 const uint32_t BSC4_BASE = 0xFE205800;
-const uint32_t BSC5_BASE = 0xFE205a80;
-const uint32_t BSC6_BASE = 0xFE205c00;
+const uint32_t BSC5_BASE = 0xFE205A80;
+const uint32_t BSC6_BASE = 0xFE205C00;
 const uint32_t BSC_SIZE  = 0x00000020;
 typedef struct
 {

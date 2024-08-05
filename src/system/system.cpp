@@ -26,7 +26,7 @@ uint8_t Init(void){
 }
 
 uint8_t SetGpioFunction(uint8_t pin, GPIO_Function alt){
-    uint8_t bit_mode = (uint8_t)alt;
+    uint32_t bit_mode = static_cast<uint32_t>(alt);
 
     if (0 <= pin && pin <= 9) {
         REG_GPIO->GPFSEL0 &= ~(0b111 << pin*3);
