@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 enable_language(CXX)
 project(rpl4)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 file(GLOB SRCS src/*/*.cpp)
 add_library(${PROJECT_NAME} ${SRCS})
