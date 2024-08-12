@@ -5,21 +5,71 @@
 
 namespace rpl {
 
-const uint32_t SPI0_BASE = 0xFE204000;
-const uint32_t SPI3_BASE = 0xFE204600;
-const uint32_t SPI4_BASE = 0xFE204800;
-const uint32_t SPI5_BASE = 0xFE204A00;
-const uint32_t SPI6_BASE = 0xFE204C00;
-const uint32_t SPI_SIZE  = 0x00000018;
-typedef struct
-{
-  volatile uint32_t CS;            // 0x00
-  volatile uint32_t FIFO;          // 0x04
-  volatile uint32_t CLK;           // 0x08
-  volatile uint32_t DLEN;          // 0x0c
-  volatile uint32_t LTOH;          // 0x10
-  volatile uint32_t DC;            // 0x14
-} SPI_Typedef;
+constexpr uint32_t kSpi0AddressBase = 0xFE204000;
+constexpr uint32_t kSpi3AddressBase = 0xFE204600;
+constexpr uint32_t kSpi4AddressBase = 0xFE204800;
+constexpr uint32_t kSpi5AddressBase = 0xFE204A00;
+constexpr uint32_t kSpi6AddressBase = 0xFE204C00;
+constexpr uint32_t kSpiRegisterSize = 0x00000018;
+
+struct SpiCS {
+  volatile uint32_t CS : 2;
+  volatile uint32_t CPHA : 1;
+  volatile uint32_t CPOL : 1;
+  volatile uint32_t CLEAR : 2;
+  volatile uint32_t CSPOL : 1;
+  volatile uint32_t TA : 1;
+  volatile uint32_t DMAEN : 1;
+  volatile uint32_t INTD : 1;
+  volatile uint32_t INTR : 1;
+  volatile uint32_t ADCS : 1;
+  volatile uint32_t REN : 1;
+  volatile uint32_t LEN : 1;
+  volatile uint32_t LMONO : 1;
+  volatile uint32_t TE_EN : 1;
+  volatile uint32_t DONE : 1;
+  volatile uint32_t RXD : 1;
+  volatile uint32_t TXD : 1;
+  volatile uint32_t RXR : 1;
+  volatile uint32_t RXF : 1;
+  volatile uint32_t CSPOL0 : 1;
+  volatile uint32_t CSPOL1 : 1;
+  volatile uint32_t CSPOL2 : 1;
+  volatile uint32_t DMA_LEN : 1;
+  volatile uint32_t LEN_LONG : 1;
+};
+
+struct SpiFIFO {
+  volatile uint32_t DATA : 32;
+};
+
+struct SpiCLK {
+  volatile uint32_t CDIV : 16;
+};
+
+struct SpiDLEN {
+  volatile uint32_t LEN : 16;
+};
+
+struct SpiLTOH {
+  volatile uint32_t TOH : 4;
+};
+
+struct SpiDC {
+  volatile uint32_t TDREQ : 8;
+  volatile uint32_t TPANIC : 8;
+  volatile uint32_t RDREQ : 8;
+  volatile uint32_t RPANIC : 8;
+};
+
+struct SpiRegisterMap {
+  volatile SpiCS   CS;            // 0x00
+  volatile SpiFIFO FIFO;          // 0x04
+  volatile SpiCLK  CLK;           // 0x08
+  volatile SpiDLEN DLEN;          // 0x0c
+  volatile SpiLTOH LTOH;          // 0x10
+  volatile SpiDC   DC;            // 0x14
+};
 
 
 const uint32_t SPI1_BASE = 0xFE215080;
