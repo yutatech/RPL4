@@ -36,6 +36,23 @@ typedef struct
   volatile uint32_t TDR;           // 0x8c
 } UART_Typedef;
 
+const uint32_t UART1_BASE = 0xFE215040;
+const uint32_t UART_AUX_SIZE  = 0x0000002c;
+typedef struct
+{
+    volatile uint32_t IO_REG;         // 0x00
+    volatile uint32_t IER_REG;        // 0x04
+    volatile uint32_t IIR_REG;        // 0x08
+    volatile uint32_t LCR_REG;        // 0x0c
+    volatile uint32_t MCR_REG;        // 0x10
+    volatile uint32_t LSR_REG;        // 0x14
+    volatile uint32_t MSR_REG;        // 0x18
+    volatile uint32_t SCRATCH;        // 0x1c
+    volatile uint32_t CNTL_REG;       // 0x20
+    volatile uint32_t STAT_REG;       // 0x24
+    volatile uint32_t BAUD_REG;       // 0x28
+} UART_AUX_Typedef;
+
 }
 
 #endif
