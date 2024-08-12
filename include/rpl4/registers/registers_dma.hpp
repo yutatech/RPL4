@@ -5,22 +5,22 @@
 
 namespace rpl {
 
-const uint32_t DMA0_BASE  = 0xFE007000;
-const uint32_t DMA1_BASE  = 0xFE007100;
-const uint32_t DMA2_BASE  = 0xFE007200;
-const uint32_t DMA3_BASE  = 0xFE007300;
-const uint32_t DMA4_BASE  = 0xFE007400;
-const uint32_t DMA5_BASE  = 0xFE007500;
-const uint32_t DMA6_BASE  = 0xFE007600;
-const uint32_t DMA7_BASE  = 0xFE007700;
-const uint32_t DMA8_BASE  = 0xFE007800;
-const uint32_t DMA9_BASE  = 0xFE007900;
-const uint32_t DMA10_BASE = 0xFE007A00;
-const uint32_t DMA11_BASE = 0xFE007B00;
-const uint32_t DMA12_BASE = 0xFE007C00;
-const uint32_t DMA13_BASE = 0xFE007D00;
-const uint32_t DMA14_BASE = 0xFEE05000;
-const uint32_t DMA_SIZE   = 0x00000020;
+constexpr uint32_t DMA0_BASE  = 0xFE007000;
+constexpr uint32_t DMA1_BASE  = 0xFE007100;
+constexpr uint32_t DMA2_BASE  = 0xFE007200;
+constexpr uint32_t DMA3_BASE  = 0xFE007300;
+constexpr uint32_t DMA4_BASE  = 0xFE007400;
+constexpr uint32_t DMA5_BASE  = 0xFE007500;
+constexpr uint32_t DMA6_BASE  = 0xFE007600;
+constexpr uint32_t DMA7_BASE  = 0xFE007700;
+constexpr uint32_t DMA8_BASE  = 0xFE007800;
+constexpr uint32_t DMA9_BASE  = 0xFE007900;
+constexpr uint32_t DMA10_BASE = 0xFE007A00;
+constexpr uint32_t DMA11_BASE = 0xFE007B00;
+constexpr uint32_t DMA12_BASE = 0xFE007C00;
+constexpr uint32_t DMA13_BASE = 0xFE007D00;
+constexpr uint32_t DMA14_BASE = 0xFEE05000;
+constexpr uint32_t DMA_SIZE   = 0x00000020;
 typedef struct
 {
   volatile uint32_t C;      // 0x00
