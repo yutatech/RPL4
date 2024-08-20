@@ -320,6 +320,12 @@ namespace rpl
     volatile LTOH ltoh; // 0x10
     volatile DC dc;     // 0x14
   };
+  
+  extern SpiRegisterMap *REG_SPI0;
+  extern SpiRegisterMap *REG_SPI3;
+  extern SpiRegisterMap *REG_SPI4;
+  extern SpiRegisterMap *REG_SPI5;
+  extern SpiRegisterMap *REG_SPI6;
 
   constexpr uint32_t SPI1_BASE = 0xFE215080;
   constexpr uint32_t SPI2_BASE = 0xFE2150C0;
@@ -341,6 +347,9 @@ namespace rpl
     volatile uint32_t TXHOLD_REGd; // 0x3c
   } SPI_AUX_Typedef;
 
-}
+  extern SPI_AUX_Typedef *REG_SPI1;
+  extern SPI_AUX_Typedef *REG_SPI2;
+
+} // rpl
 
 #endif

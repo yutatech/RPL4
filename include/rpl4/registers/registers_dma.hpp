@@ -33,6 +33,22 @@ typedef struct
   volatile uint32_t CLKT;   // 0x1c
 } DMA_Typedef;
 
+extern DMA_Typedef*  REG_DMA0;
+extern DMA_Typedef*  REG_DMA1;
+extern DMA_Typedef*  REG_DMA2;
+extern DMA_Typedef*  REG_DMA3;
+extern DMA_Typedef*  REG_DMA4;
+extern DMA_Typedef*  REG_DMA5;
+extern DMA_Typedef*  REG_DMA6;
+extern DMA_Typedef*  REG_DMA7;
+extern DMA_Typedef*  REG_DMA8;
+extern DMA_Typedef*  REG_DMA9;
+extern DMA_Typedef*  REG_DMA10;
+extern DMA_Typedef*  REG_DMA11;
+extern DMA_Typedef*  REG_DMA12;
+extern DMA_Typedef*  REG_DMA13;
+extern DMA_Typedef*  REG_DMA14;
+
 }
 
 #endif

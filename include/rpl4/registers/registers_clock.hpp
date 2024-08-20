@@ -85,6 +85,8 @@ typedef struct
   volatile uint32_t CM_EMMCDIV;	// 0x1c4
 } CLK_Typedef;
 
+extern CLK_Typedef*  REG_CLK;
+
 }
 
 #endif

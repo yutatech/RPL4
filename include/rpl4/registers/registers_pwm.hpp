@@ -22,6 +22,9 @@ typedef struct
   volatile uint32_t DAT2;          // 0x24
 } PWM_Typedef;
 
+extern PWM_Typedef*  REG_PWM0;
+extern PWM_Typedef*  REG_PWM1;
+
 }
 
 #endif

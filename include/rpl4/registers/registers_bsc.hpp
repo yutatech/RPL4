@@ -24,6 +24,13 @@ typedef struct
     volatile uint32_t CLKT;   // 0x1c
 } BSC_Typedef;
 
+extern BSC_Typedef*  REG_BSC0;
+extern BSC_Typedef*  REG_BSC1;
+extern BSC_Typedef*  REG_BSC3;
+extern BSC_Typedef*  REG_BSC4;
+extern BSC_Typedef*  REG_BSC5;
+extern BSC_Typedef*  REG_BSC6;
+
 }
 
 #endif

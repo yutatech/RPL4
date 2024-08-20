@@ -52,6 +52,8 @@ typedef struct
     volatile uint32_t AUX_SPI2_TXHOLD_REGd;  // 0xfc
 } AUX_Typedef;
 
+extern AUX_Typedef*  REG_AUX;
+
 }
 
 #endif

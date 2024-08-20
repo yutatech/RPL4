@@ -64,6 +64,8 @@ enum class GPIO_Function : uint8_t
   ALT5   = 0b010,
 };
 
+extern GPIO_Typedef* REG_GPIO;
+
 }
 
 #endif
