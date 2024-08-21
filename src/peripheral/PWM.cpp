@@ -23,6 +23,7 @@ uint8_t PWM::Init() {
     }
 
     rpl::ClockConfig(rpl::REG_CLK->CM_PWMCTL, rpl::REG_CLK->CM_PWMDIV, rpl::CLKSRC::OSC, 2.16, 1); // set pwm source clock frequency to 25MHz
+    return 0;
 }
 
 double PWM::Write(double duty){

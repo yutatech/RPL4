@@ -2,26 +2,30 @@
 #include "rpl4/system/system.hpp"
 
 GPIO::GPIO(uint8_t _pin) : pin(_pin) {
-    if (pin < 0 || 57 < pin)
-        rpl::Log(rpl::LogLevel::Error, "There is no GPIO %d\n", pin);
+    if (pin > 57)
+        rpl::Log(rpl::LogLevel::Fatal, "There is no GPIO %d\n", pin);
 }
 
 bool GPIO::Read(){
-    if (0 <= pin && pin <= 31)
-        return (rpl::REG_GPIO->GPLEV0 & 0b1<<pin) == 0b1<<pin;
-    else if (32 <= pin && pin <= 57)
-        return (rpl::REG_GPIO->GPLEV1 & 0b1<<(pin-32)) == 0b1<<(pin-32);
+    if (pin <= 31) {
+        return (rpl::REG_GPIO->GPLEV0 & 0b1<<pin) == static_cast<uint32_t>(0b1<<pin);
+    } else if (32 <= pin && pin <= 57) {
+        return (rpl::REG_GPIO->GPLEV1 & 0b1<<(pin-32)) == static_cast<uint32_t>(0b1<<(pin-32));
+    } else {
+        rpl::Log(rpl::LogLevel::Error, "[GPIO::Read()] Invalid pin number %d is set.", pin);
+        return false;
+    }
 }
 
 bool GPIO::Write(bool output){
     if (output) {
-        if (0 <= pin && pin <= 31)
+        if (pin <= 31)
             rpl::REG_GPIO->GPSET0 |= 0b1<<pin;
         else if (32 <= pin && pin <= 57)
             rpl::REG_GPIO->GPSET1 |= 0b1<<(pin-32);
     }
     else {
-        if (0 <= pin && pin <= 31)
+        if (pin <= 31)
             rpl::REG_GPIO->GPCLR0 |= 0b1<<pin;
         else if (32 <= pin && pin <= 57)
             rpl::REG_GPIO->GPCLR1 |= 0b1<<(pin-32);
@@ -56,7 +60,7 @@ void GPIO::SetPinMode(PinMode mode){
     SetGpioFunction(pin, bit_mode);
 
     //set pullup or pulldown
-    if (0 <= pin && pin <= 15) {
+    if (pin <= 15) {
         rpl::REG_GPIO->PUP_PDN_CNTRL_REG0 &= ~(0b11 << pin*2);
         rpl::REG_GPIO->PUP_PDN_CNTRL_REG0 |= bit_pull_up_down << pin*2;
     }
