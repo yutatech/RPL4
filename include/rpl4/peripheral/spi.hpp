@@ -42,32 +42,36 @@ class Spi {
    */
   inline SpiRegisterMap* GetRegister() { return register_map_; }
 
-  inline void SetChipSelectForCommunication(SpiRegisterMap::CS::CS_ cs) {
-    register_map_->cs.cs = cs;
+  using ChipSelect = SpiRegisterMap::CS::CS_;
+  inline void SetChipSelectForCommunication(ChipSelect chip_select) {
+    register_map_->cs.cs = chip_select;
   }
 
-  inline void SetClockPhase(SpiRegisterMap::CS::CPHA cpha) {
-    register_map_->cs.cpha = cpha;
+  using ClockPhase = SpiRegisterMap::CS::CPHA;
+  inline void SetClockPhase(ClockPhase clock_phase) {
+    register_map_->cs.cpha = clock_phase;
   }
 
-  inline void SetClockPolarity(SpiRegisterMap::CS::CPOL cpol) {
-    register_map_->cs.cpol = cpol;
+  using ClockPolarity = SpiRegisterMap::CS::CPOL;
+  inline void SetClockPolarity(ClockPolarity clock_polarity) {
+    register_map_->cs.cpol = clock_polarity;
   }
 
-  inline void SetCsPolarity(SpiRegisterMap::CS::CSPOL cspol) {
-    register_map_->cs.cspol = cspol;
+  using CsPolarity = SpiRegisterMap::CS::CSPOL;
+  inline void SetCsPolarity(CsPolarity cs_polarity) {
+    register_map_->cs.cspol = cs_polarity;
   }
 
-  inline void SetCs0Polarity(SpiRegisterMap::CS::CSPOL cspol0) {
-    register_map_->cs.cspol0 = cspol0;
+  inline void SetCs0Polarity(CsPolarity cs_polarity) {
+    register_map_->cs.cspol0 = cs_polarity;
   }
 
-  inline void SetCs1Polarity(SpiRegisterMap::CS::CSPOL cspol1) {
-    register_map_->cs.cspol1 = cspol1;
+  inline void SetCs1Polarity(CsPolarity cs_polarity) {
+    register_map_->cs.cspol1 = cs_polarity;
   }
 
-  inline void SetCs2Polarity(SpiRegisterMap::CS::CSPOL cspol2) {
-    register_map_->cs.cspol2 = cspol2;
+  inline void SetCs2Polarity(CsPolarity cs_polarity) {
+    register_map_->cs.cspol2 = cs_polarity;
   }
 
   inline void EnableDma() {
