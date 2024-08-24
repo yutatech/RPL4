@@ -1,4 +1,6 @@
 #include "rpl4/peripheral/PWM.hpp"
+
+#include "rpl4/peripheral/gpio.hpp"
 #include "rpl4/system/system.hpp"
 #include <unistd.h>
 
@@ -15,10 +17,10 @@ PWM::PWM(uint8_t _pin) : pin(_pin) {
 uint8_t PWM::Init() {
     switch (pin){
         case 12: case 13: case 40: case 41: case 45:
-            rpl::SetGpioFunction(pin, rpl::GPIO_Function::ALT0);
+            rpl::Gpio::SetAltFunction(pin, rpl::Gpio::AltFunction::kAlt0);
             break;
         case 18: case 19:
-            rpl::SetGpioFunction(pin, rpl::GPIO_Function::ALT5);
+            rpl::Gpio::SetAltFunction(pin, rpl::Gpio::AltFunction::kAlt5);
             break;
     }
 

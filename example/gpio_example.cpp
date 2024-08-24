@@ -1,18 +1,19 @@
-#include "rpl4/rpl4.hpp"
-#include "rpl4/peripheral/GPIO.hpp"
-
-#include <thread>
 #include <chrono>
+#include <thread>
 
-GPIO gpio(12);
+#include "rpl4/peripheral/gpio.hpp"
+#include "rpl4/rpl4.hpp"
+
+rpl::Gpio gpio(12);
 
 int main(void) {
   rpl::Init();
 
-  gpio.SetPinMode(PinMode::output);
+  gpio.SetAltFunction(rpl::Gpio::AltFunction::kOutput);
+  gpio.SetPullRegister(rpl::Gpio::PullRegister::kNoRegister);
 
   using namespace std::chrono_literals;
-  while(true) {
+  while (true) {
     gpio = true;
     std::this_thread::sleep_for(1000ms);
     gpio = false;

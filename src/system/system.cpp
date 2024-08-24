@@ -33,7 +33,7 @@ DMA_Typedef*  REG_DMA11;
 DMA_Typedef*  REG_DMA12;
 DMA_Typedef*  REG_DMA13;
 DMA_Typedef*  REG_DMA14;
-GPIO_Typedef* REG_GPIO;
+GpioRegisterMap* REG_GPIO;
 PWM_Typedef*  REG_PWM0;
 PWM_Typedef*  REG_PWM1;
 SpiRegisterMap*  REG_SPI0;
@@ -83,7 +83,7 @@ uint8_t Init(void){
     constexpr static uint32_t region2_base = 0xfe200000;
     constexpr static uint32_t region2_size = 0x2000;
     uint32_t* region2 = reinterpret_cast<uint32_t*>(mmap(NULL, region2_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region2_base));
-    REG_GPIO = reinterpret_cast<GPIO_Typedef*>(region2 + (GPIO_BASE - region2_base) / 4);
+    REG_GPIO = reinterpret_cast<GpioRegisterMap*>(region2 + (kGpioAddressBase - region2_base) / 4);
     REG_UART0 = reinterpret_cast<UART_Typedef*>(region2 + (UART0_BASE - region2_base) / 4);
     REG_UART2 = reinterpret_cast<UART_Typedef*>(region2 + (UART2_BASE - region2_base) / 4);
     REG_UART3 = reinterpret_cast<UART_Typedef*>(region2 + (UART3_BASE - region2_base) / 4);
@@ -127,37 +127,6 @@ uint8_t Init(void){
 
     system_initialized = true;
 	return 0;
-}
-
-uint8_t SetGpioFunction(uint8_t pin, GPIO_Function alt){
-    uint32_t bit_mode = static_cast<uint32_t>(alt);
-
-    if (pin <= 9) {
-        REG_GPIO->GPFSEL0 &= ~(0b111 << pin*3);
-        REG_GPIO->GPFSEL0 |= bit_mode << pin*3;
-    }
-    else if (10 <= pin && pin <= 19) {
-        REG_GPIO->GPFSEL1 &= ~(0b111 << (pin-10)*3);
-        REG_GPIO->GPFSEL1 |= bit_mode << (pin-10)*3;
-    }
-    else if (20 <= pin && pin <= 29) {
-        REG_GPIO->GPFSEL2 &= ~(0b111 << (pin-20)*3);
-        REG_GPIO->GPFSEL2 |= bit_mode << (pin-20)*3;
-    }
-    else if (30 <= pin && pin <= 39) {
-        REG_GPIO->GPFSEL3 &= ~(0b111 << (pin-30)*3);
-        REG_GPIO->GPFSEL3 |= bit_mode << (pin-30)*3;
-    }
-    else if (40 <= pin && pin <= 49) {
-        REG_GPIO->GPFSEL4 &= ~(0b111 << (pin-40)*3);
-        REG_GPIO->GPFSEL4 |= bit_mode << (pin-40)*3;
-    }
-    else if (50 <= pin && pin <= 57) {
-        REG_GPIO->GPFSEL5 &= ~(0b111 << (pin-50)*3);
-        REG_GPIO->GPFSEL5 |= bit_mode << (pin-50)*3;
-    }
-
-	return bit_mode;
 }
 
 }
