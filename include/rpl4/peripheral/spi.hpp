@@ -48,28 +48,53 @@ class Spi {
   }
 
   using ClockPhase = SpiRegisterMap::CS::CPHA;
+  /**
+   * @brief Set the Clock Phase
+   *
+   * @param clock_phase
+   *    If kBeginning is set, SCLK transitions in the beginning of the data bit,
+   *    and the receiver should sample the data bit on the first edge of SCLK.
+   *    If kMiddle is set, SCLK transitions in the middle of the data bit, and
+   *    the receiver should sample the data bit on the second edge of SCLK.
+   */
   inline void SetClockPhase(ClockPhase clock_phase) {
     register_map_->cs.cpha = clock_phase;
   }
 
   using ClockPolarity = SpiRegisterMap::CS::CPOL;
+  /**
+   * @brief Specifies the output polarity of the SCLK in the idle state.
+   *
+   * @param clock_polarity
+   */
   inline void SetClockPolarity(ClockPolarity clock_polarity) {
     register_map_->cs.cpol = clock_polarity;
   }
 
   using CsPolarity = SpiRegisterMap::CS::CSPOL;
-  inline void SetCsPolarity(CsPolarity cs_polarity) {
-    register_map_->cs.cspol = cs_polarity;
-  }
-
+  /**
+   * @brief Specifies the output polarity of the CS0 in the active state.
+   *
+   * @param cs_polarity
+   */
   inline void SetCs0Polarity(CsPolarity cs_polarity) {
     register_map_->cs.cspol0 = cs_polarity;
   }
 
+  /**
+   * @brief Specifies the output polarity of the CS1 in the active state.
+   *
+   * @param cs_polarity
+   */
   inline void SetCs1Polarity(CsPolarity cs_polarity) {
     register_map_->cs.cspol1 = cs_polarity;
   }
 
+  /**
+   * @brief Specifies the output polarity of the CS2 in the active state.
+   *
+   * @param cs_polarity
+   */
   inline void SetCs2Polarity(CsPolarity cs_polarity) {
     register_map_->cs.cspol2 = cs_polarity;
   }
@@ -82,6 +107,16 @@ class Spi {
     register_map_->cs.dmaen = SpiRegisterMap::CS::DMAEN::kDisable;
   }
 
+  /**
+   * @brief Specifies the SCK frequency.
+   *
+   * @param divider
+   *
+   * @note SCK frequency is 500MHz / DIV. If 0 or 1 is set to
+   *       divider, DIV is 65536. If another value is set to divider, DIV is
+   *       divider. For example, if the divider is set to 100, the frequency
+   *       will be 5MHz.
+   */
   inline void SetClockDivider(uint16_t divider) {
     register_map_->clk.cdiv = static_cast<uint32_t>(divider);
   }
