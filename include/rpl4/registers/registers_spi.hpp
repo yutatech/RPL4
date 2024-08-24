@@ -30,7 +30,7 @@ struct SpiRegisterMap {
       kChipSelect0 = 0b00,  // Chip select 0
       kChipSelect1 = 0b01,  // Chip select 1
       kChipSelect2 = 0b10,  // Chip select 2
-      kReserved = 0b11,     // Reserved
+      kDisable = 0b11,      // Do not automatically perform chip select
     };
 
     /**
@@ -65,8 +65,8 @@ struct SpiRegisterMap {
      * @brief Chip Select Polarity
      */
     enum class CSPOL : uint32_t {
-      kLow = 0b0,    // Chip select lines are active low
-      kHihgh = 0b1,  // Chip select lines are active high
+      kLow = 0b0,   // Chip select lines are active low
+      kHigh = 0b1,  // Chip select lines are active high
     };
 
     /**
