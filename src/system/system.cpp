@@ -60,70 +60,70 @@ uint8_t Init(void){
     constexpr static uint32_t region0_base = 0xfe007000;
     constexpr static uint32_t region0_size = 0x1000;
     uint32_t* region0 = reinterpret_cast<uint32_t*>(mmap(NULL, region0_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region0_base));
-    REG_DMA0 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA0_BASE);
-    REG_DMA1 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA1_BASE);
-    REG_DMA2 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA2_BASE);
-    REG_DMA3 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA3_BASE);
-    REG_DMA4 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA4_BASE);
-    REG_DMA5 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA5_BASE);
-    REG_DMA6 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA6_BASE);
-    REG_DMA7 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA7_BASE);
-    REG_DMA8 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA8_BASE);
-    REG_DMA9 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA9_BASE);
-    REG_DMA10 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA10_BASE);
-    REG_DMA11 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA11_BASE);
-    REG_DMA12 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA12_BASE);
-    REG_DMA13 = reinterpret_cast<DMA_Typedef*>(region0 + region0_base - DMA13_BASE);
+    REG_DMA0 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA0_BASE - region0_base) / 4);
+    REG_DMA1 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA1_BASE - region0_base) / 4);
+    REG_DMA2 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA2_BASE - region0_base) / 4);
+    REG_DMA3 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA3_BASE - region0_base) / 4);
+    REG_DMA4 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA4_BASE - region0_base) / 4);
+    REG_DMA5 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA5_BASE - region0_base) / 4);
+    REG_DMA6 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA6_BASE - region0_base) / 4);
+    REG_DMA7 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA7_BASE - region0_base) / 4);
+    REG_DMA8 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA8_BASE - region0_base) / 4);
+    REG_DMA9 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA9_BASE - region0_base) / 4);
+    REG_DMA10 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA10_BASE - region0_base) / 4);
+    REG_DMA11 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA11_BASE - region0_base) / 4);
+    REG_DMA12 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA12_BASE - region0_base) / 4);
+    REG_DMA13 = reinterpret_cast<DMA_Typedef*>(region0 + (DMA13_BASE - region0_base) / 4);
 
     constexpr static uint32_t region1_base = 0xfe101000;
     constexpr static uint32_t region1_size = 0x1000;
     uint32_t* region1 = reinterpret_cast<uint32_t*>(mmap(NULL, region1_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region1_base));
-    REG_CLK = reinterpret_cast<CLK_Typedef*>(region1 + region1_base - CLK_BASE);
+    REG_CLK = reinterpret_cast<CLK_Typedef*>(region1 + (CLK_BASE - region1_base) / 4);
 
     constexpr static uint32_t region2_base = 0xfe200000;
     constexpr static uint32_t region2_size = 0x2000;
     uint32_t* region2 = reinterpret_cast<uint32_t*>(mmap(NULL, region2_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region2_base));
-    REG_GPIO = reinterpret_cast<GPIO_Typedef*>(region2 + region2_base - GPIO_BASE);
-    REG_UART0 = reinterpret_cast<UART_Typedef*>(region2 + region2_base - UART0_BASE);
-    REG_UART2 = reinterpret_cast<UART_Typedef*>(region2 + region2_base - UART2_BASE);
-    REG_UART3 = reinterpret_cast<UART_Typedef*>(region2 + region2_base - UART3_BASE);
-    REG_UART4 = reinterpret_cast<UART_Typedef*>(region2 + region2_base - UART4_BASE);
-    REG_UART5 = reinterpret_cast<UART_Typedef*>(region2 + region2_base - UART5_BASE);
+    REG_GPIO = reinterpret_cast<GPIO_Typedef*>(region2 + (GPIO_BASE - region2_base) / 4);
+    REG_UART0 = reinterpret_cast<UART_Typedef*>(region2 + (UART0_BASE - region2_base) / 4);
+    REG_UART2 = reinterpret_cast<UART_Typedef*>(region2 + (UART2_BASE - region2_base) / 4);
+    REG_UART3 = reinterpret_cast<UART_Typedef*>(region2 + (UART3_BASE - region2_base) / 4);
+    REG_UART4 = reinterpret_cast<UART_Typedef*>(region2 + (UART4_BASE - region2_base) / 4);
+    REG_UART5 = reinterpret_cast<UART_Typedef*>(region2 + (UART5_BASE - region2_base) / 4);
 
     constexpr static uint32_t region3_base = 0xfe204000;
     constexpr static uint32_t region3_size = 0x2000;
     uint32_t* region3 = reinterpret_cast<uint32_t*>(mmap(NULL, region3_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region3_base));
-    REG_SPI0 = reinterpret_cast<SpiRegisterMap*>(region3 + region3_base - kSpi0AddressBase);
-    REG_SPI3 = reinterpret_cast<SpiRegisterMap*>(region3 + region3_base - kSpi3AddressBase);
-    REG_SPI4 = reinterpret_cast<SpiRegisterMap*>(region3 + region3_base - kSpi4AddressBase);
-    REG_SPI5 = reinterpret_cast<SpiRegisterMap*>(region3 + region3_base - kSpi5AddressBase);
-    REG_SPI6 = reinterpret_cast<SpiRegisterMap*>(region3 + region3_base - kSpi6AddressBase);
-    REG_BSC0 = reinterpret_cast<BSC_Typedef*>(region3 + region3_base - BSC0_BASE);
-    REG_BSC3 = reinterpret_cast<BSC_Typedef*>(region3 + region3_base - BSC3_BASE);
-    REG_BSC4 = reinterpret_cast<BSC_Typedef*>(region3 + region3_base - BSC4_BASE);
-    REG_BSC5 = reinterpret_cast<BSC_Typedef*>(region3 + region3_base - BSC5_BASE);
-    REG_BSC6 = reinterpret_cast<BSC_Typedef*>(region3 + region3_base - BSC6_BASE);
+    REG_SPI0 = reinterpret_cast<SpiRegisterMap*>(region3 + (kSpi0AddressBase - region3_base) / 4);
+    REG_SPI3 = reinterpret_cast<SpiRegisterMap*>(region3 + (kSpi3AddressBase - region3_base) / 4);
+    REG_SPI4 = reinterpret_cast<SpiRegisterMap*>(region3 + (kSpi4AddressBase - region3_base) / 4);
+    REG_SPI5 = reinterpret_cast<SpiRegisterMap*>(region3 + (kSpi5AddressBase - region3_base) / 4);
+    REG_SPI6 = reinterpret_cast<SpiRegisterMap*>(region3 + (kSpi6AddressBase - region3_base) / 4);
+    REG_BSC0 = reinterpret_cast<BSC_Typedef*>(region3 + (BSC0_BASE - region3_base) / 4);
+    REG_BSC3 = reinterpret_cast<BSC_Typedef*>(region3 + (BSC3_BASE - region3_base) / 4);
+    REG_BSC4 = reinterpret_cast<BSC_Typedef*>(region3 + (BSC4_BASE - region3_base) / 4);
+    REG_BSC5 = reinterpret_cast<BSC_Typedef*>(region3 + (BSC5_BASE - region3_base) / 4);
+    REG_BSC6 = reinterpret_cast<BSC_Typedef*>(region3 + (BSC6_BASE - region3_base) / 4);
 
     constexpr static uint32_t region4_base = 0xfe20c000;
     constexpr static uint32_t region4_size = 0x1000;
     uint32_t* region4 = reinterpret_cast<uint32_t*>(mmap(NULL, region4_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region4_base));
-    REG_PWM0 = reinterpret_cast<PWM_Typedef*>(region4 + region4_base - PWM0_BASE);
-    REG_PWM1 = reinterpret_cast<PWM_Typedef*>(region4 + region4_base - PWM1_BASE);
+    REG_PWM0 = reinterpret_cast<PWM_Typedef*>(region4 + (PWM0_BASE - region4_base) / 4);
+    REG_PWM1 = reinterpret_cast<PWM_Typedef*>(region4 + (PWM1_BASE - region4_base) / 4);
 
     constexpr static uint32_t region5_base = 0xfe215000;
     constexpr static uint32_t region5_size = 0x1000;
     uint32_t* region5 = reinterpret_cast<uint32_t*>(mmap(NULL, region5_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region5_base));
-    REG_AUX = reinterpret_cast<AUX_Typedef*>(region5 + region5_base - AUX_BASE);
+    REG_AUX = reinterpret_cast<AUX_Typedef*>(region5 + (AUX_BASE - region5_base) / 4);
 
     constexpr static uint32_t region6_base = 0xfe804000;
     constexpr static uint32_t region6_size = 0x1000;
     uint32_t* region6 = reinterpret_cast<uint32_t*>(mmap(NULL, region6_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region6_base));
-    REG_BSC1 = reinterpret_cast<BSC_Typedef*>(region6 + region6_base - BSC1_BASE);
+    REG_BSC1 = reinterpret_cast<BSC_Typedef*>(region6 + (BSC1_BASE - region6_base) / 4);
 
     constexpr static uint32_t region7_base = 0xfee05000;
     constexpr static uint32_t region7_size = 0x1000;
     uint32_t* region7 = reinterpret_cast<uint32_t*>(mmap(NULL, region7_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region7_base));
-    REG_DMA14 = reinterpret_cast<DMA_Typedef*>(region7 + region7_base - DMA14_BASE);
+    REG_DMA14 = reinterpret_cast<DMA_Typedef*>(region7 + (DMA14_BASE - region7_base) / 4);
 
     system_initialized = true;
 	return 0;
@@ -132,7 +132,7 @@ uint8_t Init(void){
 uint8_t SetGpioFunction(uint8_t pin, GPIO_Function alt){
     uint32_t bit_mode = static_cast<uint32_t>(alt);
 
-    if (0 <= pin && pin <= 9) {
+    if (pin <= 9) {
         REG_GPIO->GPFSEL0 &= ~(0b111 << pin*3);
         REG_GPIO->GPFSEL0 |= bit_mode << pin*3;
     }
