@@ -1,10 +1,10 @@
 #include <chrono>
-#include <memory>
-#include <thread>
 #include <cstdio>
 #include <iostream>
-#include <bitset>
+#include <memory>
+#include <thread>
 
+#include "rpl4/peripheral/gpio.hpp"
 #include "rpl4/peripheral/spi.hpp"
 #include "rpl4/rpl4.hpp"
 
@@ -12,30 +12,33 @@ int main(void) {
   rpl::Init();
   using namespace std::chrono_literals;
 
-  std::shared_ptr<rpl::Spi> spi = rpl::Spi::GetInstance(rpl::Spi::Port::kSpi3);
-  
-  rpl::SetGpioFunction(7, rpl::GPIO_Function::ALT0);  // SPI0_CE1
-  rpl::SetGpioFunction(8, rpl::GPIO_Function::ALT0);  // SPI0_CE0
-  rpl::SetGpioFunction(9, rpl::GPIO_Function::ALT0);  // SPI0_MISO
-  rpl::SetGpioFunction(10, rpl::GPIO_Function::ALT0); // SPI0_MOSI
-  rpl::SetGpioFunction(11, rpl::GPIO_Function::ALT0); // SPI0_SCLK
+  std::shared_ptr<rpl::Spi> spi = rpl::Spi::GetInstance(rpl::Spi::Port::kSpi0);
 
-  rpl::SetGpioFunction(27, rpl::GPIO_Function::ALT5); // SPI6_CE1
-  rpl::SetGpioFunction(18, rpl::GPIO_Function::ALT3); // SPI6_CE0
-  rpl::SetGpioFunction(19, rpl::GPIO_Function::ALT3); // SPI6_MISO
-  rpl::SetGpioFunction(20, rpl::GPIO_Function::ALT3); // SPI6_MOSI
-  rpl::SetGpioFunction(21, rpl::GPIO_Function::ALT3); // SPI6_SCLK
+  // GPIO configuration
+  rpl::Gpio::SetAltFunction(7, rpl::Gpio::AltFunction::kAlt0);   // SPI0_CE1
+  rpl::Gpio::SetAltFunction(8, rpl::Gpio::AltFunction::kAlt0);   // SPI0_CE0
+  rpl::Gpio::SetAltFunction(9, rpl::Gpio::AltFunction::kAlt0);   // SPI0_MISO
+  rpl::Gpio::SetAltFunction(10, rpl::Gpio::AltFunction::kAlt0);  // SPI0_MOSI
+  rpl::Gpio::SetAltFunction(11, rpl::Gpio::AltFunction::kAlt0);  // SPI0_SCLK
 
-  rpl::SetGpioFunction(0, rpl::GPIO_Function::ALT3);  // SPI3_CE0
-  rpl::SetGpioFunction(1, rpl::GPIO_Function::ALT3);  // SPI3_MISO
-  rpl::SetGpioFunction(2, rpl::GPIO_Function::ALT3); // SPI3_MOSI
-  rpl::SetGpioFunction(3, rpl::GPIO_Function::ALT3); // SPI3_SCLK
+  // SPI0_CE1
+  rpl::Gpio::SetPullRegister(7, rpl::Gpio::PullRegister::kNoRegister);
+  // SPI0_CE0
+  rpl::Gpio::SetPullRegister(8, rpl::Gpio::PullRegister::kNoRegister);
+  // SPI0_MISO
+  rpl::Gpio::SetPullRegister(9, rpl::Gpio::PullRegister::kPullDown);
+  // SPI0_MOSI
+  rpl::Gpio::SetPullRegister(10, rpl::Gpio::PullRegister::kNoRegister);
+  // SPI0_SCLK
+  rpl::Gpio::SetPullRegister(11, rpl::Gpio::PullRegister::kNoRegister);
 
+  // SPI configuration
   spi->SetClockPhase(rpl::Spi::ClockPhase::kBeginning);
   spi->SetClockPolarity(rpl::Spi::ClockPolarity::kLow);
-  spi->SetClockDivider(4096);
+  spi->SetClockDivider(1024);
   spi->SetCs0Polarity(rpl::Spi::CsPolarity::kLow);
   spi->SetCs1Polarity(rpl::Spi::CsPolarity::kHigh);
+  spi->SetReadEnable(rpl::Spi::ReadEnable::kDisable);
 
   while (true) {
     uint8_t tx_buf[13] = "Hello World\n";
