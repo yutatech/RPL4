@@ -157,6 +157,18 @@ class Spi {
     register_map_->fifo.data = data;
   }
 
+  using ReadEnable = SpiRegisterMap::CS::REN;
+  /**
+   * @brief Set Read Enable state.
+   *
+   * @param read_enable
+   *        kDisable : MOSI pin is in write mode. kEnable : MOSI pin is in
+   *        read mode and does not output any signal.
+   */
+  inline void SetReadEnable(ReadEnable read_enable) {
+    register_map_->cs.ren = read_enable;
+  }
+
   inline uint32_t ReadDataFromRxFifo() { return register_map_->fifo.data; }
 
   void TransmitAndReceiveBlocking(uint8_t* transmit_buf, uint8_t* receive_buf,
