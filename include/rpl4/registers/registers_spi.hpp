@@ -37,8 +37,8 @@ struct SpiRegisterMap {
      * @brief Clock Phase
      */
     enum class CPHA : uint32_t {
-      kMiddle = 0b0,     // First SCLK transition at middle of data bit.
-      kBeginning = 0b1,  // First SCLK transition at middle of data bit.
+      kBeginning = 0b0,  // Sample data bits at the first edge of SCLK.
+      kMiddle = 0b1,     // Sample data bits at the second edge of SCLK.
     };
 
     /**
