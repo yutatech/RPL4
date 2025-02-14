@@ -40,9 +40,9 @@ elseif(RPL4_LOG_LEVEL STREQUAL "FATAL")
 elseif(RPL4_LOG_LEVEL STREQUAL "OFF")
   message("[RPL4] RPL4_LOG_LEBVEL=OFF. RPL4 will not output any logs.")
 else()
-  add_definitions(-DRPL4_LOG_LEVEL=LogLevel::Warning)
+  add_definitions(-DRPL4_LOG_LEVEL=LogLevel::Error)
   message(WARNING "[RPL4 Warning]\n"
-                  "  The specified RPL4_LOG_LEVEL : ${RPL4_LOG_LEVEL} does not exists, so it has been automatically set to Error.\n"
+                  "  The specified RPL4_LOG_LEVEL : ${RPL4_LOG_LEVEL} does not exists, so it has been automatically set to ERROR.\n"
                   "  Please specify a log level from the following options:\n"
                   "    [DEBUG, INFO, WARNING, ERROR, FATAL, OFF]")
 endif()
