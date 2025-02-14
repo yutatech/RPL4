@@ -4,11 +4,14 @@ enable_language(CXX)
 project(rpl4)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
-file(GLOB SRCS src/*/*.cpp)
-add_library(${PROJECT_NAME} ${SRCS})
-target_include_directories(${PROJECT_NAME} PUBLIC
+add_library(${PROJECT_NAME} INTERFACE)
+
+target_include_directories(${PROJECT_NAME} INTERFACE
   include
 )
+
+file(GLOB SRCS src/*/*.cpp)
+target_sources(${PROJECT_NAME} INTERFACE ${SRCS})
 
 if(NOT DEFINED RPL4_LOG_LEVEL)
   set(RPL4_LOG_LEVEL "WARNING")
