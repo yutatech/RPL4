@@ -1,5 +1,5 @@
-#ifndef RPI4_SYSTEM_HPP_
-#define RPI4_SYSTEM_HPP_
+#ifndef RPL4_SYSTEM_HPP
+#define RPL4_SYSTEM_HPP
 
 // Header files commonly used in the rpl4 library
 #include "iostream"
@@ -15,4 +15,4 @@ uint8_t Init(void);
 
 }  // namespace rpl
 
-#endif
+#endif // RPL4_SYSTEM_HPP
