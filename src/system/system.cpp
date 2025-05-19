@@ -50,6 +50,17 @@ UART_Typedef*  REG_UART4;
 UART_Typedef*  REG_UART5;
 UART_AUX_Typedef*  REG_UART1;
 
+bool IsAvailable(void){
+    struct stat buffer;
+    if (stat("/dev/mem", &buffer) == 0) {
+        return true;
+    } else {
+        Log(LogLevel::Warning, "/dev/mem does not exist. "
+            "This system may not be Raspberry Pi.");
+        return false;
+    }
+}
+
 uint8_t Init(void){
 	int fd;
 	if ((fd = open("/dev/mem", O_RDWR|O_SYNC)) < 0) {
