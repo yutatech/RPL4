@@ -4,13 +4,16 @@
 #include <memory>
 
 #include "rpl4/system/log.hpp"
+#include "rpl4/system/system.hpp"
 
 namespace rpl {
 
 std::array<std::shared_ptr<Spi>, 5> Spi::instances_ = {nullptr};
 
 std::shared_ptr<Spi> Spi::GetInstance(Port port) {
-  if (instances_[static_cast<size_t>(port)] == nullptr) {
+  if (!IsInitialized()) {
+    Log(LogLevel::Error, "[SPI::GetInstance()] RPL is not initialized.");
+  } else if (instances_[static_cast<size_t>(port)] == nullptr) {
     switch (port) {
       case Port::kSpi0:
         instances_[static_cast<size_t>(port)] =
@@ -43,7 +46,7 @@ std::shared_ptr<Spi> Spi::GetInstance(Port port) {
 
 Spi::Spi(SpiRegisterMap* register_map) : register_map_(register_map) {}
 
-void Spi::TransmitAndReceiveBlocking(uint8_t* transmit_buf,
+void Spi::TransmitAndReceiveBlocking(const uint8_t* transmit_buf,
                                      uint8_t* receive_buf,
                                      uint32_t data_length) {
   StartTransmission();
