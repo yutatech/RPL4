@@ -61,6 +61,10 @@ bool IsAvailable(void){
     }
 }
 
+bool IsInitialized(void){
+    return system_initialized;
+}
+
 uint8_t Init(void){
 	int fd;
 	if ((fd = open("/dev/mem", O_RDWR|O_SYNC)) < 0) {

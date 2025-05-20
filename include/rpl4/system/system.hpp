@@ -20,6 +20,13 @@ extern bool system_initialized;
  */
 bool IsAvailable(void);
 
+/**
+ * @brief Check if rpl is initialized
+ * 
+ * @return true if initialized, false otherwise
+ */
+bool IsInitialized(void);
+
 uint8_t Init(void);
 
 }  // namespace rpl
