@@ -40,7 +40,7 @@ class Spi {
    *
    * @return SpiRegisterMap*
    */
-  inline SpiRegisterMap* GetRegister() { return register_map_; }
+  inline SpiRegisterMap* GetRegister() const { return register_map_; }
 
   using ChipSelect = SpiRegisterMap::CS::CS_;
   inline void SetChipSelectForCommunication(ChipSelect chip_select) {
@@ -169,9 +169,9 @@ class Spi {
     register_map_->cs.ren = read_enable;
   }
 
-  inline uint32_t ReadDataFromRxFifo() { return register_map_->fifo.data; }
+  inline uint32_t ReadDataFromRxFifo() const { return register_map_->fifo.data; }
 
-  void TransmitAndReceiveBlocking(uint8_t* transmit_buf, uint8_t* receive_buf,
+  void TransmitAndReceiveBlocking(const uint8_t* transmit_buf, uint8_t* receive_buf,
                                   uint32_t data_length);
 
  private:
