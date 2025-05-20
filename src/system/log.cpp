@@ -33,6 +33,7 @@ void Log(LogLevel level, const char* format, ...){
             std::cout << "[RPL4 Debug] " << message << std::endl;
     }
 #else
+    (void) format;  // Suppress unused variable warning
     if (level == LogLevel::Fatal) {
         std::cout << "[RPL4] Fatal Error occured. Program will terminate..." << std::endl;
         exit(-1);
