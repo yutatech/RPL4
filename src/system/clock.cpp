@@ -6,11 +6,11 @@ namespace rpl {
 
 constexpr uint32_t PASSWD = 0x5a;
 
-void SetCmCtl(volatile uint32_t &reg, volatile uint32_t data){
+void SetCmCtl(volatile uint32_t &reg, uint32_t data){
     reg = (PASSWD << 24) | data;
 }
     
-void SetCmDiv(volatile uint32_t &reg, volatile uint32_t divi, uint32_t divf){
+void SetCmDiv(volatile uint32_t &reg, uint32_t divi, uint32_t divf){
     reg = (PASSWD << 24) | (divi << 12) | divf;
 }
 
