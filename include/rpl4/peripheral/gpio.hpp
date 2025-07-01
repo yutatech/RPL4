@@ -1,7 +1,9 @@
 #ifndef RPL4_PERIPHERAL_GPIO_HPP_
 #define RPL4_PERIPHERAL_GPIO_HPP_
 
+#include <array>
 #include <cstdint>
+#include <memory>
 
 namespace rpl {
 
@@ -29,13 +31,22 @@ class Gpio {
     kAlt4 = 0b011,
     kAlt5 = 0b010,
   };
-
   /**
-   * @brief Construct a new Gpio object
+   * @brief Get the Gpio instance of specified pin.
+   * @details To save memory, only the pin instance obtained with GetInstance()
+   *          is created. If a pin instance has already been created, the same
+   *          instance will be returned.
    *
    * @param pin GPIO pin number (0 ~ 57)
+   * @return std::shared_ptr<Gpio>
    */
-  Gpio(uint8_t pin);
+  static std::shared_ptr<Gpio> GetInstance(uint8_t pin);
+
+  Gpio(const Gpio&) = delete;
+  Gpio& operator=(const Gpio&) = delete;
+  Gpio(Gpio&&) = delete;
+  Gpio& operator=(Gpio&&) = delete;
+  ~Gpio() = default;
 
   /**
    * @brief Read the pin state
@@ -87,6 +98,16 @@ class Gpio {
   bool operator=(bool output) { return Write(output); }
 
  private:
+  /**
+   * @brief Construct a new Gpio object
+   *
+   * @param pin GPIO pin number (0 ~ 57)
+   */
+  Gpio(uint8_t pin);
+
+  static constexpr size_t kNumOfInstances = 58;
+  static std::array<std::shared_ptr<Gpio>, kNumOfInstances> instances_;
+
   uint8_t pin_;
 };
 

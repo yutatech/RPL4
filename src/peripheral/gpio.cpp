@@ -5,16 +5,30 @@
 
 namespace rpl {
 
+std::array<std::shared_ptr<Gpio>, Gpio::kNumOfInstances> Gpio::instances_ = {
+    nullptr};
+
+std::shared_ptr<Gpio> Gpio::GetInstance(uint8_t pin) {
+  if (pin >= kNumOfInstances) {
+    Log(LogLevel::Fatal, "[Gpio::GetInstance()] Invalid pin number %d.", pin);
+    return nullptr;
+  }
+  if (instances_[static_cast<size_t>(pin)] == nullptr) {
+    instances_[static_cast<size_t>(pin)] = std::shared_ptr<Gpio>(new Gpio(pin));
+  }
+  return instances_[static_cast<size_t>(pin)];
+}
+
 Gpio::Gpio(uint8_t pin) : pin_(pin) {
   if (pin_ > 57) Log(LogLevel::Fatal, "[Gpio]GPIO %d is not exists.\n", pin);
 }
 
 bool Gpio::Read() {
   if (pin_ <= 31) {
-    return (REG_GPIO->gplev0 & 0b1 << pin_) ==
+    return (REG_GPIO->gplev0 & (0b1 << pin_)) ==
            static_cast<uint32_t>(0b1 << pin_);
   } else if (32 <= pin_ && pin_ <= 57) {
-    return (REG_GPIO->gplev1 & 0b1 << (pin_ - 32)) ==
+    return (REG_GPIO->gplev1 & (0b1 << (pin_ - 32))) ==
            static_cast<uint32_t>(0b1 << (pin_ - 32));
   } else {
     Log(LogLevel::Error, "[Gpio::Read()] Invalid pin_ number %d is set.", pin_);
