@@ -10,7 +10,7 @@ namespace rpl {
 
 class Spi {
  public:
-  enum class Port {
+  enum class Port : size_t {
     kSpi0 = 0,
     kSpi3 = 1,
     kSpi4 = 2,
@@ -61,6 +61,19 @@ class Spi {
     register_map_->cs.cpha = clock_phase;
   }
 
+  /**
+   * @brief Get the Clock Phase
+   *
+   * @return ClockPhase
+   *    If kBeginning is set, SCLK transitions in the beginning of the data bit,
+   *    and the receiver should sample the data bit on the first edge of SCLK.
+   *    If kMiddle is set, SCLK transitions in the middle of the data bit, and
+   *    the receiver should sample the data bit on the second edge of SCLK.
+   */
+  inline ClockPhase GetClockPhase() {
+    return register_map_->cs.cpha;
+  }
+
   using ClockPolarity = SpiRegisterMap::CS::CPOL;
   /**
    * @brief Specifies the output polarity of the SCLK in the idle state.
@@ -69,6 +82,17 @@ class Spi {
    */
   inline void SetClockPolarity(ClockPolarity clock_polarity) {
     register_map_->cs.cpol = clock_polarity;
+  }
+
+  /**
+   * @brief Get the Clock Polarity
+   *
+   * @return ClockPolarity
+   *    If kLow is set, SCLK is low in the idle state.
+   *    If kHigh is set, SCLK is high in the idle state.
+   */
+  inline ClockPolarity GetClockPolarity() {
+    return register_map_->cs.cpol;
   }
 
   using CsPolarity = SpiRegisterMap::CS::CSPOL;
@@ -177,7 +201,8 @@ class Spi {
  private:
   Spi(SpiRegisterMap* register_map);
 
-  static std::array<std::shared_ptr<Spi>, 5> instances_;
+  static constexpr size_t kNumOfInstances = 5;
+  static std::array<std::shared_ptr<Spi>, kNumOfInstances> instances_;
 
   SpiRegisterMap* register_map_;
 };

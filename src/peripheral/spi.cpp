@@ -8,7 +8,8 @@
 
 namespace rpl {
 
-std::array<std::shared_ptr<Spi>, 5> Spi::instances_ = {nullptr};
+std::array<std::shared_ptr<Spi>, Spi::kNumOfInstances> Spi::instances_ = {
+    nullptr};
 
 std::shared_ptr<Spi> Spi::GetInstance(Port port) {
   if (!IsInitialized()) {
