@@ -6,6 +6,8 @@
 
 #include <sys/stat.h>
 
+#include <fstream>
+
 namespace rpl {
 
 bool system_initialized = false;
@@ -51,14 +53,25 @@ UART_Typedef*  REG_UART5;
 UART_AUX_Typedef*  REG_UART1;
 
 bool IsAvailable(void){
-    struct stat buffer;
-    if (stat("/dev/mem", &buffer) == 0) {
-        return true;
-    } else {
-        Log(LogLevel::Warning, "/dev/mem does not exist. "
-            "This system may not be Raspberry Pi.");
-        return false;
+    std::ifstream file("/proc/cpuinfo");
+    if (!file) {
+      Log(LogLevel::Warning,
+          "Failed to open /proc/cpuinfo. "
+          "Cannot determine if this is a Raspberry Pi system.");
+      return false;
     }
+  
+    std::string line;
+    while (std::getline(file, line)) {
+      if (line.find("Hardware") != std::string::npos &&
+          line.find("BCM2835") != std::string::npos) {
+        return true;
+      }
+    }
+    Log(LogLevel::Warning,
+        "This system does not appear to be a Raspberry Pi. "
+        "RPL4 may not work as expected.");
+    return false;
 }
 
 bool IsInitialized(void){
