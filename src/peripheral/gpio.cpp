@@ -13,7 +13,10 @@ std::shared_ptr<Gpio> Gpio::GetInstance(uint8_t pin) {
     Log(LogLevel::Fatal, "[Gpio::GetInstance()] Invalid pin number %d.", pin);
     return nullptr;
   }
-  if (instances_[static_cast<size_t>(pin)] == nullptr) {
+
+  if (!IsInitialized()) {
+    Log(LogLevel::Error, "[Gpio::GetInstance()] RPL is not initialized.");
+  } else if (instances_[static_cast<size_t>(pin)] == nullptr) {
     instances_[static_cast<size_t>(pin)] = std::shared_ptr<Gpio>(new Gpio(pin));
   }
   return instances_[static_cast<size_t>(pin)];
