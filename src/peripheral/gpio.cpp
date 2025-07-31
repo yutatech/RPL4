@@ -42,14 +42,14 @@ bool Gpio::Read() {
 bool Gpio::Write(bool output) {
   if (output) {
     if (pin_ <= 31)
-      REG_GPIO->gpset0 |= 0b1 << pin_;
+      REG_GPIO->gpset0 = 0b1 << pin_;
     else if (32 <= pin_ && pin_ <= 57)
-      REG_GPIO->gpset1 |= 0b1 << (pin_ - 32);
+      REG_GPIO->gpset1 = 0b1 << (pin_ - 32);
   } else {
     if (pin_ <= 31)
-      REG_GPIO->gpclr0 |= 0b1 << pin_;
+      REG_GPIO->gpclr0 = 0b1 << pin_;
     else if (32 <= pin_ && pin_ <= 57)
-      REG_GPIO->gpclr1 |= 0b1 << (pin_ - 32);
+      REG_GPIO->gpclr1 = 0b1 << (pin_ - 32);
   }
 
   return output;
