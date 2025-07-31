@@ -98,6 +98,10 @@ void Gpio::SetPullRegister(PullRegister pull_register) {
 }
 
 void Gpio::SetAltFunction(uint8_t pin, AltFunction alt_function) {
+  if (!IsInitialized()) {
+    Log(LogLevel::Error, "[Gpio::SetAltFunction()] RPL is not initialized.");
+    return;
+  }
   if (pin <= 9) {
     REG_GPIO->gpfsel0 &= ~(0b111 << pin * 3);
     REG_GPIO->gpfsel0 |= static_cast<uint32_t>(alt_function) << pin * 3;
@@ -122,6 +126,10 @@ void Gpio::SetAltFunction(uint8_t pin, AltFunction alt_function) {
 }
 
 void Gpio::SetPullRegister(uint8_t pin, PullRegister pull_register) {
+  if (!IsInitialized()) {
+    Log(LogLevel::Error, "[Gpio::SetPullRegister ()] RPL is not initialized.");
+    return;
+  }
   if (pin <= 15) {
     REG_GPIO->pup_pdn_cntrl_reg0 &= ~(0b11 << pin * 2);
     REG_GPIO->pup_pdn_cntrl_reg0 |= static_cast<uint8_t>(pull_register)
