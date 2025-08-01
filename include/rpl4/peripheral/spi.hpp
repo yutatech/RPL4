@@ -4,11 +4,12 @@
 #include <array>
 #include <memory>
 
+#include "rpl4/peripheral/spi_base.hpp"
 #include "rpl4/registers/registers_spi.hpp"
 
 namespace rpl {
 
-class Spi {
+class Spi : public SpiBase {
  public:
   enum class Port : size_t {
     kSpi0 = 0,
@@ -42,6 +43,22 @@ class Spi {
    */
   inline SpiRegisterMap* GetRegister() const { return register_map_; }
 
+  void SetChipSelectForCommunication(uint8_t chip_select) override {
+    switch (chip_select) {
+      case 0:
+        SetChipSelectForCommunication(ChipSelect::kChipSelect0);
+        break;
+      case 1:
+        SetChipSelectForCommunication(ChipSelect::kChipSelect1);
+        break;
+      case 2:
+        SetChipSelectForCommunication(ChipSelect::kChipSelect2);
+        break;
+      default:
+        break;
+    }
+  }
+
   using ChipSelect = SpiRegisterMap::CS::CS_;
   inline void SetChipSelectForCommunication(ChipSelect chip_select) {
     register_map_->cs.cs = chip_select;
@@ -70,9 +87,7 @@ class Spi {
    *    If kMiddle is set, SCLK transitions in the middle of the data bit, and
    *    the receiver should sample the data bit on the second edge of SCLK.
    */
-  inline ClockPhase GetClockPhase() {
-    return register_map_->cs.cpha;
-  }
+  inline ClockPhase GetClockPhase() { return register_map_->cs.cpha; }
 
   using ClockPolarity = SpiRegisterMap::CS::CPOL;
   /**
@@ -91,9 +106,7 @@ class Spi {
    *    If kLow is set, SCLK is low in the idle state.
    *    If kHigh is set, SCLK is high in the idle state.
    */
-  inline ClockPolarity GetClockPolarity() {
-    return register_map_->cs.cpol;
-  }
+  inline ClockPolarity GetClockPolarity() { return register_map_->cs.cpol; }
 
   using CsPolarity = SpiRegisterMap::CS::CSPOL;
   /**
@@ -193,10 +206,13 @@ class Spi {
     register_map_->cs.ren = read_enable;
   }
 
-  inline uint32_t ReadDataFromRxFifo() const { return register_map_->fifo.data; }
+  inline uint32_t ReadDataFromRxFifo() const {
+    return register_map_->fifo.data;
+  }
 
-  void TransmitAndReceiveBlocking(const uint8_t* transmit_buf, uint8_t* receive_buf,
-                                  uint32_t data_length);
+  void TransmitAndReceiveBlocking(const uint8_t* transmit_buf,
+                                  uint8_t* receive_buf,
+                                  uint32_t data_length) override;
 
  private:
   Spi(SpiRegisterMap* register_map);

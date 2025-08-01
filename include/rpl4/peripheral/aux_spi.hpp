@@ -4,12 +4,13 @@
 #include <array>
 #include <memory>
 
+#include "rpl4/peripheral/spi_base.hpp"
 #include "rpl4/registers/registers_aux.hpp"
 #include "rpl4/registers/registers_aux_spi.hpp"
 
 namespace rpl {
 
-class AuxSpi {
+class AuxSpi : public SpiBase {
  public:
   enum class Port : size_t {
     kAuxSpi1 = 0,
@@ -64,6 +65,22 @@ class AuxSpi {
       REG_AUX->enables.spi1 = AuxRegisterMap::Enables::Spi1Enable::kDisabled;
     } else if (register_map_ == REG_SPI2) {
       REG_AUX->enables.spi2 = AuxRegisterMap::Enables::Spi2Enable::kDisabled;
+    }
+  }
+
+  void SetChipSelectForCommunication(uint8_t chip_select) override {
+    switch (chip_select) {
+      case 0:
+        SetChipSelectForCommunication(ChipSelect::kChipSelect0);
+        break;
+      case 1:
+        SetChipSelectForCommunication(ChipSelect::kChipSelect1);
+        break;
+      case 2:
+        SetChipSelectForCommunication(ChipSelect::kChipSelect2);
+        break;
+      default:
+        break;
     }
   }
 
@@ -194,7 +211,8 @@ class AuxSpi {
   }
 
   void TransmitAndReceiveBlocking(const uint8_t* transmit_buf,
-                                  uint8_t* receive_buf, uint32_t data_length);
+                                  uint8_t* receive_buf,
+                                  uint32_t data_length) override;
 
  private:
   AuxSpi(AuxSpiRegisterMap* register_map);

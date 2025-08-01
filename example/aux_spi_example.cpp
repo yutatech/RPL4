@@ -23,23 +23,23 @@ int main(void) {
   rpl::Gpio::SetAltFunction(20, rpl::Gpio::AltFunction::kAlt4);  // SPI1_MOSI
   rpl::Gpio::SetAltFunction(21, rpl::Gpio::AltFunction::kAlt4);  // SPI1_SCLK
 
-  // SPI0_CE2
+  // SPI1_CE2
   rpl::Gpio::SetPullRegister(16, rpl::Gpio::PullRegister::kNoRegister);
-  // SPI0_CE1
+  // SPI1_CE1
   rpl::Gpio::SetPullRegister(17, rpl::Gpio::PullRegister::kNoRegister);
-  // SPI0_CE0
+  // SPI1_CE0
   rpl::Gpio::SetPullRegister(18, rpl::Gpio::PullRegister::kNoRegister);
-  // SPI0_MISO
+  // SPI1_MISO
   rpl::Gpio::SetPullRegister(19, rpl::Gpio::PullRegister::kPullDown);
-  // SPI0_MOSI
+  // SPI1_MOSI
   rpl::Gpio::SetPullRegister(20, rpl::Gpio::PullRegister::kNoRegister);
-  // SPI0_SCLK
+  // SPI1_SCLK
   rpl::Gpio::SetPullRegister(21, rpl::Gpio::PullRegister::kNoRegister);
 
   // SPI configuration
   spi->Enable();
   spi->SetMisoClockPhase(rpl::AuxSpi::MisoClockPhase::kRisingEdge);
-  spi->SetMosiClockPhase(rpl::AuxSpi::MosiClockPhase::kRisingEdge);
+  spi->SetMosiClockPhase(rpl::AuxSpi::MosiClockPhase::kFallingEdge);
   spi->SetClockPolarity(rpl::AuxSpi::ClockPolarity::kHigh);
   spi->SetClockDivider(1024);
   spi->SetBitLength(8);  // 8 bits per transfer

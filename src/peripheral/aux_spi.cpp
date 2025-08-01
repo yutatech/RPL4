@@ -113,23 +113,9 @@ void AuxSpi::ConfigureDataShiftTx() {
 
 void AuxSpi::ConfigureDataShiftRx() {
   if (register_map_->cntl_1.shift_in_ms_bit_first == MisoBitOrder::kMsbFirst) {
-    if ((register_map_->cntl_0.invert_spi_clock == ClockPolarity::kHigh &&
-         register_map_->cntl_0.in_rising == MisoClockPhase::kFallingEdge) ||
-        (register_map_->cntl_0.invert_spi_clock == ClockPolarity::kLow &&
-         register_map_->cntl_0.in_rising == MisoClockPhase::kRisingEdge)) {
-      data_shift_rx_ = 0;
-    } else {
-      data_shift_rx_ = 1;
-    }
+    data_shift_rx_ = 0;
   } else {
-    if ((register_map_->cntl_0.invert_spi_clock == ClockPolarity::kHigh &&
-         register_map_->cntl_0.in_rising == MisoClockPhase::kFallingEdge) ||
-        (register_map_->cntl_0.invert_spi_clock == ClockPolarity::kLow &&
-         register_map_->cntl_0.in_rising == MisoClockPhase::kRisingEdge)) {
-      data_shift_rx_ = 32 - register_map_->cntl_0.shift_length;
-    } else {
-      data_shift_rx_ = 31 - register_map_->cntl_0.shift_length;
-    }
+    data_shift_rx_ = 32 - register_map_->cntl_0.shift_length;
   }
 }
 
