@@ -5,55 +5,95 @@
 
 namespace rpl {
 
-const uint32_t AUX_BASE = 0xFE215000;
-const uint32_t AUX_SIZE = 0x00000100;
-typedef struct
-{
-    volatile uint32_t AUX_IRQ;               // 0x00
-    volatile uint32_t AUX_ENABLES;           // 0x04
-    volatile uint32_t RESERVED_1[16];        // 0x08 ~ 0x3c
-    volatile uint32_t AUX_MU_IO_REG;         // 0x40
-    volatile uint32_t AUX_MU_IER_REG;        // 0x44
-    volatile uint32_t AUX_MU_IIR_REG;        // 0x48
-    volatile uint32_t AUX_MU_LCR_REG;        // 0x4c
-    volatile uint32_t AUX_MU_MCR_REG;        // 0x50
-    volatile uint32_t AUX_MU_LSR_REG;        // 0x54
-    volatile uint32_t AUX_MU_MSR_REG;        // 0x58
-    volatile uint32_t AUX_MU_SCRATCH;        // 0x5c
-    volatile uint32_t AUX_MU_CNTL_REG;       // 0x60
-    volatile uint32_t AUX_MU_STAT_REG;       // 0x64
-    volatile uint32_t AUX_MU_BAUD_REG;       // 0x68
-    volatile uint32_t RESERVED_2[5];         // 0x6c ~ 0x7c
-    volatile uint32_t AUX_SPI1_CNTL0_REG;    // 0x80
-    volatile uint32_t AUX_SPI1_CNTL1_REG;    // 0x84
-    volatile uint32_t AUX_SPI1_STAT_REG;     // 0x88
-    volatile uint32_t AUX_SPI1_PEEK_REG;     // 0x8c
-    volatile uint32_t RESERVED_3[4];         // 0x90 ~ 0x9c
-    volatile uint32_t AUX_SPI1_IO_REGa;      // 0xa0
-    volatile uint32_t AUX_SPI1_IO_REGb;      // 0xa4
-    volatile uint32_t AUX_SPI1_IO_REGc;      // 0xa8
-    volatile uint32_t AUX_SPI1_IO_REGd;      // 0xac
-    volatile uint32_t AUX_SPI1_TXHOLD_REGa;  // 0xb0
-    volatile uint32_t AUX_SPI1_TXHOLD_REGb;  // 0xb4
-    volatile uint32_t AUX_SPI1_TXHOLD_REGc;  // 0xb8
-    volatile uint32_t AUX_SPI1_TXHOLD_REGd;  // 0xbc
-    volatile uint32_t AUX_SPI2_CNTL0_REG;    // 0xc0
-    volatile uint32_t AUX_SPI2_CNTL1_REG;    // 0xc4
-    volatile uint32_t AUX_SPI2_STAT_REG;     // 0xc8
-    volatile uint32_t AUX_SPI2_PEEK_REG;     // 0xcc
-    volatile uint32_t RESERVED_4[4];         // 0xd0 ~0xdc
-    volatile uint32_t AUX_SPI2_IO_REGa;      // 0xe0
-    volatile uint32_t AUX_SPI2_IO_REGb;      // 0xe4
-    volatile uint32_t AUX_SPI2_IO_REGc;      // 0xe8
-    volatile uint32_t AUX_SPI2_IO_REGd;      // 0xec
-    volatile uint32_t AUX_SPI2_TXHOLD_REGa;  // 0xf0
-    volatile uint32_t AUX_SPI2_TXHOLD_REGb;  // 0xf4
-    volatile uint32_t AUX_SPI2_TXHOLD_REGc;  // 0xf8
-    volatile uint32_t AUX_SPI2_TXHOLD_REGd;  // 0xfc
-} AUX_Typedef;
+const uint32_t kAuxAddressBase = 0xFE215000;
+const uint32_t kAuxRegisterSize = 0x00000008;
+struct AuxRegisterMap {
+  struct Irq {
+    Irq(const volatile Irq&);
+    volatile Irq& operator=(const volatile Irq&) volatile;
+    Irq& operator=(const volatile Irq&);
+    volatile Irq& operator=(const Irq&) volatile;
 
-extern AUX_Typedef*  REG_AUX;
+    /**
+     * @brief If set the mini UART has an interrupt pending.
+     */
+    enum class MiniUartIrq : uint32_t {
+      kNoInterrupt = 0b0,
+      kInterruptPending = 0b1,
+    };
 
-}
+    /**
+     * @brief If set the SPI1 module has an interrupt pending.
+     */
+    enum class Spi1Irq : uint32_t {
+      kNoInterrupt = 0b0,
+      kInterruptPending = 0b1,
+    };
+
+    /**
+     * @brief If set the SPI2 module has an interrupt pending.
+     */
+    enum class Spi2Irq : uint32_t {
+      kNoInterrupt = 0b0,
+      kInterruptPending = 0b1,
+    };
+
+    MiniUartIrq mini_uart_irq : 1;
+    Spi1Irq spi1_irq : 1;
+    Spi2Irq spi2_irq : 1;
+  };
+
+  struct Enables {
+    Enables(const volatile Enables&);
+    volatile Enables& operator=(const volatile Enables&) volatile;
+    Enables& operator=(const volatile Enables&);
+    volatile Enables& operator=(const Enables&) volatile;
+
+    /**
+     * @brief If set the mini UART is enabled.
+     */
+    enum class MiniUartEnable : uint32_t {
+      // the mini UART is disabled. That also disables any mini UART register
+      // access
+      kDisabled = 0b0,
+      // the mini UART is enabled. The UART will immediately start receiving
+      // data, especially if the UART1_RX line is low.
+      kEnabled = 0b1,
+    };
+
+    /**
+     * @brief If set the SPI1 module is enabled.
+     */
+    enum class Spi1Enable : uint32_t {
+      // the SPI 1 module is disabled. That also disables any SPI 1 module
+      // register access
+      kDisabled = 0b0,
+      // the SPI 1 module is enabled.
+      kEnabled = 0b1,
+    };
+
+    /**
+     * @brief If set the SPI2 module is enabled.
+     */
+    enum class Spi2Enable : uint32_t {
+      // the SPI 2 module is disabled. That also disables any SPI 2 module
+      // register access
+      kDisabled = 0b0,
+      // the SPI 2 module is enabled.
+      kEnabled = 0b1,
+    };
+
+    MiniUartEnable mini_uart : 1;
+    Spi1Enable spi1 : 1;
+    Spi2Enable spi2 : 1;
+  };
+
+  volatile Irq irq;          // 0x00
+  volatile Enables enables;  // 0x04
+};
+
+extern AuxRegisterMap* REG_AUX;
+
+}  // namespace rpl
 
 #endif

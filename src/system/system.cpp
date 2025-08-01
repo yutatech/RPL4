@@ -12,7 +12,7 @@ namespace rpl {
 
 bool system_initialized = false;
 
-AUX_Typedef*  REG_AUX;
+AuxRegisterMap*  REG_AUX;
 BSC_Typedef*  REG_BSC0;
 BSC_Typedef*  REG_BSC1;
 BSC_Typedef*  REG_BSC3;
@@ -39,8 +39,8 @@ GpioRegisterMap* REG_GPIO;
 PWM_Typedef*  REG_PWM0;
 PWM_Typedef*  REG_PWM1;
 SpiRegisterMap*  REG_SPI0;
-SPI_AUX_Typedef*  REG_SPI1;
-SPI_AUX_Typedef*  REG_SPI2;
+AuxSpiRegisterMap*  REG_SPI1;
+AuxSpiRegisterMap*  REG_SPI2;
 SpiRegisterMap*  REG_SPI3;
 SpiRegisterMap*  REG_SPI4;
 SpiRegisterMap*  REG_SPI5;
@@ -141,7 +141,9 @@ uint8_t Init(void){
     constexpr static uint32_t region5_base = 0xfe215000;
     constexpr static uint32_t region5_size = 0x1000;
     uint32_t* region5 = reinterpret_cast<uint32_t*>(mmap(NULL, region5_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, region5_base));
-    REG_AUX = reinterpret_cast<AUX_Typedef*>(region5 + (AUX_BASE - region5_base) / 4);
+    REG_AUX = reinterpret_cast<AuxRegisterMap*>(region5 + (kAuxAddressBase - region5_base) / 4);
+    REG_SPI1 = reinterpret_cast<AuxSpiRegisterMap*>(region5 + (kSpi1AddressBase - region5_base) / 4);
+    REG_SPI2 = reinterpret_cast<AuxSpiRegisterMap*>(region5 + (kSpi2AddressBase - region5_base) / 4);
 
     constexpr static uint32_t region6_base = 0xfe804000;
     constexpr static uint32_t region6_size = 0x1000;

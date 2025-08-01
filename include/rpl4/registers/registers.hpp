@@ -2,6 +2,7 @@
 #define RPL4_REGISTERS_HPP_
 
 #include "rpl4/registers/registers_aux.hpp"
+#include "rpl4/registers/registers_aux_spi.hpp"
 #include "rpl4/registers/registers_bsc.hpp"
 #include "rpl4/registers/registers_clock.hpp"
 #include "rpl4/registers/registers_dma.hpp"
