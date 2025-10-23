@@ -5,8 +5,8 @@
 
 namespace rpl {
 
-const uint32_t CLK_BASE = 0xFE101000;
-const uint32_t CLK_SIZE = 0x000001C8;
+constexpr uint32_t kClockAddressBase = 0xFE101000;
+constexpr uint32_t kClockRegisterSize = 0x000001C8;
 typedef struct
 {
   volatile uint32_t RESERVED_1[2]; // 0x000 ~ 0x007
@@ -83,10 +83,10 @@ typedef struct
   volatile uint32_t CM_AVEODIV;	// 0x1bc
   volatile uint32_t CM_EMMCCTL;	// 0x1c0
   volatile uint32_t CM_EMMCDIV;	// 0x1c4
-} CLK_Typedef;
+} ClockRegisterMap;
 
-extern CLK_Typedef*  REG_CLK;
+extern ClockRegisterMap* REG_CLK;
 
-}
+}  // namespace rpl
 
-#endif
+#endif  // RPL4_REGISTERS_CLOCK_HPP_
