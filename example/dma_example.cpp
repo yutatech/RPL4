@@ -34,13 +34,12 @@ int main(void) {
     return 1;
   }
 
-  // Initialize source buffer with test pattern
   for (size_t i = 0; i < kBufferSize; i++) {
-    src_buffer[i] = i * 0x11111111;
+    // Initialize source buffer with test pattern
+    src_buffer[i] = i * i;
+    // Clear destination buffer
+    dst_buffer[i] = 0;
   }
-
-  // Clear destination buffer
-  memset(dst_buffer, 0, kBufferSize * sizeof(uint32_t));
 
   // Get physical addresses
   uint32_t src_physical = dma_memory.GetPhysicalAddress(src_buffer);
@@ -97,9 +96,11 @@ int main(void) {
 
     if (success) {
       std::cout << "Data verification passed!" << std::endl;
-      std::cout << "First few values: ";
-      for (size_t i = 0; i < 5; i++) {
-        std::cout << "0x" << std::hex << dst_buffer[i] << " ";
+      std::cout << "First few values: " << std::endl;
+      std::cout << "src \tdst" << std::endl;
+      for (size_t i = 0; i < kBufferSize; i++) {
+        std::cout << std::hex << src_buffer[i] << "\t" << dst_buffer[i]
+                  << std::endl;
       }
       std::cout << std::endl;
     }
