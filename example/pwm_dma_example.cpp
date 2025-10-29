@@ -42,7 +42,7 @@ int main(void) {
   pwm->ClearFifo();
 
   // Create a pattern of PWM duty cycles (sine wave)
-  constexpr size_t kPatternSize = 100;
+  constexpr size_t kPatternSize = 1000;
   uint32_t* pattern_buffer = static_cast<uint32_t*>(
       dma_memory.Allocate(kPatternSize * sizeof(uint32_t)));
 
@@ -64,9 +64,8 @@ int main(void) {
             << pattern_buffer[kPatternSize / 4] << std::endl;
 
   // Create DMA control blocks for circular buffer
-  constexpr size_t kNumControlBlocks = 2;
   auto* control_blocks = static_cast<rpl::DmaControlBlock*>(
-      dma_memory.Allocate(kNumControlBlocks * sizeof(rpl::DmaControlBlock)));
+      dma_memory.Allocate(sizeof(rpl::DmaControlBlock)));
 
   if (control_blocks == nullptr) {
     std::cerr << "Failed to allocate control blocks" << std::endl;
@@ -79,24 +78,14 @@ int main(void) {
   uint32_t cb_physical = dma_memory.GetPhysicalAddress(control_blocks);
   uint32_t pwm_fifo_physical = pwm->GetFifoPhysicalAddress();
 
-  // Configure first control block (first half of pattern)
+  // Configure control block
   rpl::Dma::ConfigureMemoryToPeripheral(
-      &control_blocks[0], pattern_physical, pwm_fifo_physical,
-      (kPatternSize / 2) * sizeof(uint32_t),
+      control_blocks, pattern_physical, pwm_fifo_physical,
+      (kPatternSize) * sizeof(uint32_t),
       rpl::DmaRegisterMap::TI::PERMAP::kPwm0);
 
-  // Link to second control block
-  control_blocks[0].next_control_block = cb_physical + sizeof(rpl::DmaControlBlock);
-
-  // Configure second control block (second half of pattern)
-  rpl::Dma::ConfigureMemoryToPeripheral(
-      &control_blocks[1],
-      pattern_physical + (kPatternSize / 2) * sizeof(uint32_t),
-      pwm_fifo_physical, (kPatternSize / 2) * sizeof(uint32_t),
-      rpl::DmaRegisterMap::TI::PERMAP::kPwm0);
-
-  // Link back to first control block for circular operation
-  control_blocks[1].next_control_block = cb_physical;
+  // Link to second control block (circular buffer)
+  control_blocks->next_control_block = cb_physical;
 
   std::cout << "Control blocks configured at physical address: 0x" << std::hex
             << cb_physical << std::endl;
