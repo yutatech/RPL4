@@ -210,9 +210,9 @@ uint32_t Pwm::GetFifoPhysicalAddress() const {
   // Calculate physical address of FIF1 register
   uint32_t base_physical;
   if (port_ == Port::kPwm0) {
-    base_physical = kPwm0AddressBase;
+    base_physical = kPwm0AddressBase - 0x80000000;
   } else {
-    base_physical = kPwm1AddressBase;
+    base_physical = kPwm1AddressBase- 0x80000000;
   }
   // FIF1 is at offset 0x18
   return base_physical + 0x18;

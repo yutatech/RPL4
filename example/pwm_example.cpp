@@ -30,6 +30,7 @@ int main(void) {
 
   // Use M/S mode for stable duty control
   pwm->SetMSMode(rpl::Pwm::Channel::kChannel1, true);
+  pwm->DisableFifo(rpl::Pwm::Channel::kChannel1);
 
   // Enable PWM channel
   pwm->Enable(rpl::Pwm::Channel::kChannel1);
