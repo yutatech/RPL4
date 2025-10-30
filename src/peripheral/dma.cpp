@@ -207,6 +207,7 @@ void Dma::ConfigureMemoryToPeripheral(DmaControlBlock* control_block,
   ti |= static_cast<uint32_t>(DmaRegisterMap::TI::SRC_INC::kEnable) << 8;
   ti |= static_cast<uint32_t>(DmaRegisterMap::TI::DEST_DREQ::kEnable) << 6;
   ti |= static_cast<uint32_t>(DmaRegisterMap::TI::WAIT_RESP::kEnable) << 3;
+  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::NO_WIDE_BURSTS::kEnable) << 26;
   ti |= static_cast<uint32_t>(dreq) << 16;
 
   control_block->transfer_info = ti;
