@@ -33,7 +33,6 @@ int main(void) {
 
   // Set up PWM
   constexpr double kPwmFrequency = 1000.0;  // 1 kHz
-  pwm->InitializeClock(25000000);  // 25 MHz clock
   pwm->SetFrequency(rpl::Pwm::Channel::kChannel1, kPwmFrequency);
   pwm->SetMSMode(rpl::Pwm::Channel::kChannel1, true);
 

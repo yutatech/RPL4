@@ -24,7 +24,6 @@ int main(void) {
   }
 
   // Initialize clock and set frequency for channel 1
-  pwm->InitializeClock(25000000);  // 25 MHz clock
   constexpr double kFrequency = 38000.0;  // 38 kHz
   pwm->SetFrequency(rpl::Pwm::Channel::kChannel1, kFrequency);
 
