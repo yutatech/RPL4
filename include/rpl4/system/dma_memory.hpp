@@ -34,20 +34,20 @@ class DmaMemory {
    * @param size Size in bytes to allocate
    * @return Pointer to allocated virtual address, nullptr on failure
    */
-  void* Allocate(size_t size);
+  volatile void* Allocate(size_t size);
 
   /**
    * @brief Free previously allocated DMA memory
    * @param ptr Pointer to memory to free
    */
-  void Free(void* ptr);
+  void Free(volatile void* ptr);
 
   /**
    * @brief Get physical address from virtual address
    * @param virtual_addr Virtual address
    * @return Physical address, 0 on failure
    */
-  uint32_t GetPhysicalAddress(void* virtual_addr);
+  uint32_t GetPhysicalAddress(volatile void* virtual_addr);
 
   /**
    * @brief Allocate and construct an object in DMA memory
@@ -57,10 +57,10 @@ class DmaMemory {
    * @return Pointer to allocated object, nullptr on failure
    */
   template <typename T, typename... Args>
-  T* AllocateObject(Args&&... args) {
-    void* ptr = Allocate(sizeof(T));
+  volatile T* AllocateObject(Args&&... args) {
+    volatile void* ptr = Allocate(sizeof(T));
     if (ptr == nullptr) { return nullptr; }
-    return new (ptr) T(std::forward<Args>(args)...);
+    return new (const_cast<void*>(ptr)) T(std::forward<Args>(args)...);
   }
 
   /**
@@ -80,8 +80,9 @@ class DmaMemory {
   DmaMemory();
   ~DmaMemory();
 
+  __attribute__((packed, aligned(4)))
   struct MemoryBlock {
-    void* virtual_addr;
+    volatile void* virtual_addr;
     uint32_t physical_addr;
     size_t size;
     uint32_t handle;  // Mailbox handle

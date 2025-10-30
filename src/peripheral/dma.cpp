@@ -104,8 +104,8 @@ bool Dma::IsActive() {
   return register_map_->cs.active == DmaRegisterMap::CS::ACTIVE::kActive;
 }
 
-bool Dma::IsComplete() {
-  return register_map_->cs.end == DmaRegisterMap::CS::END::kSet;
+void Dma::End() {
+  register_map_->cs.end = DmaRegisterMap::CS::END::kSet;
 }
 
 bool Dma::HasError() {
@@ -121,6 +121,7 @@ void Dma::SetControlBlockAddress(uint32_t control_block_physical_addr) {
 }
 
 void Dma::Start() {
+  register_map_->cs.wait_for_outstanding_writes = DmaRegisterMap::CS::WAIT_FOR_OUTSTANDING_WRITES::kEnable;
   register_map_->cs.active = DmaRegisterMap::CS::ACTIVE::kActive;
 }
 
@@ -128,7 +129,7 @@ bool Dma::WaitForCompletion(uint32_t timeout_ms) {
   using namespace std::chrono_literals;
   auto start_time = std::chrono::steady_clock::now();
 
-  while (!IsComplete()) {
+  while (IsActive()) {
     if (HasError()) {
       Log(LogLevel::Error, "[Dma] Transfer error on channel %d",
           static_cast<int>(channel_));
@@ -169,20 +170,21 @@ void Dma::SetPanicPriority(uint8_t panic_priority) {
       static_cast<DmaRegisterMap::CS::PANIC_PRIORITY>(panic_priority);
 }
 
-void Dma::ConfigureMemoryToMemory(DmaControlBlock* control_block,
+void Dma::ConfigureMemoryToMemory(volatile DmaControlBlock* control_block,
                                   uint32_t src_physical,
                                   uint32_t dest_physical, uint32_t length) {
   if (control_block == nullptr) {
     return;
   }
 
-  memset(control_block, 0, sizeof(DmaControlBlock));
+  memset(const_cast<DmaControlBlock*>(control_block), 0, sizeof(DmaControlBlock));
 
   // Configure transfer info
   uint32_t ti = 0;
   ti |= static_cast<uint32_t>(DmaRegisterMap::TI::SRC_INC::kEnable) << 8;
   ti |= static_cast<uint32_t>(DmaRegisterMap::TI::DEST_INC::kEnable) << 4;
   ti |= static_cast<uint32_t>(DmaRegisterMap::TI::WAIT_RESP::kEnable) << 3;
+  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::NO_WIDE_BURSTS::kEnable) << 26;
 
   control_block->transfer_info = ti;
   control_block->source_addr = src_physical;
@@ -192,7 +194,7 @@ void Dma::ConfigureMemoryToMemory(DmaControlBlock* control_block,
   control_block->next_control_block = 0;
 }
 
-void Dma::ConfigureMemoryToPeripheral(DmaControlBlock* control_block,
+void Dma::ConfigureMemoryToPeripheral(volatile DmaControlBlock* control_block,
                                       uint32_t src_physical,
                                       uint32_t dest_physical, uint32_t length,
                                       DmaRegisterMap::TI::PERMAP dreq) {
@@ -200,7 +202,7 @@ void Dma::ConfigureMemoryToPeripheral(DmaControlBlock* control_block,
     return;
   }
 
-  memset(control_block, 0, sizeof(DmaControlBlock));
+  memset(const_cast<DmaControlBlock*>(control_block), 0, sizeof(DmaControlBlock));
 
   // Configure transfer info
   uint32_t ti = 0;
@@ -217,7 +219,7 @@ void Dma::ConfigureMemoryToPeripheral(DmaControlBlock* control_block,
   control_block->next_control_block = 0;
 }
 
-void Dma::ConfigurePeripheralToMemory(DmaControlBlock* control_block,
+void Dma::ConfigurePeripheralToMemory(volatile DmaControlBlock* control_block,
                                       uint32_t src_physical,
                                       uint32_t dest_physical, uint32_t length,
                                       DmaRegisterMap::TI::PERMAP dreq) {
@@ -225,7 +227,7 @@ void Dma::ConfigurePeripheralToMemory(DmaControlBlock* control_block,
     return;
   }
 
-  memset(control_block, 0, sizeof(DmaControlBlock));
+  memset(const_cast<DmaControlBlock*>(control_block), 0, sizeof(DmaControlBlock));
 
   // Configure transfer info
   uint32_t ti = 0;

@@ -43,7 +43,7 @@ int main(void) {
   // Create a pattern of PWM duty cycles (sine wave)
   // !! Do not use memset due to alignment requirements !!
   constexpr size_t kPatternSize = 1000;
-  uint32_t* pattern_buffer = static_cast<uint32_t*>(
+  volatile uint32_t* pattern_buffer = static_cast<volatile uint32_t*>(
       dma_memory.Allocate(kPatternSize * sizeof(uint32_t)));
 
   if (pattern_buffer == nullptr) {
@@ -64,7 +64,7 @@ int main(void) {
             << pattern_buffer[kPatternSize / 4] << std::endl;
 
   // Create DMA control blocks for circular buffer
-  auto* control_blocks = static_cast<rpl::DmaControlBlock*>(
+  volatile auto* control_blocks = static_cast<volatile rpl::DmaControlBlock*>(
       dma_memory.Allocate(sizeof(rpl::DmaControlBlock)));
 
   if (control_blocks == nullptr) {

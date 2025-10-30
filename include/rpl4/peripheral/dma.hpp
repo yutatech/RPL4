@@ -89,10 +89,8 @@ class Dma {
 
   /**
    * @brief Check if DMA transfer has completed
-   *
-   * @return true if completed, false otherwise
    */
-  bool IsComplete();
+  void End();
 
   /**
    * @brief Check if DMA has error
@@ -150,7 +148,7 @@ class Dma {
    * @param dest_physical Destination physical address
    * @param length Transfer length in bytes
    */
-  static void ConfigureMemoryToMemory(DmaControlBlock* control_block,
+  static void ConfigureMemoryToMemory(volatile DmaControlBlock* control_block,
                                       uint32_t src_physical,
                                       uint32_t dest_physical,
                                       uint32_t length);
@@ -165,7 +163,7 @@ class Dma {
    * @param dreq DREQ signal mapping
    */
   static void ConfigureMemoryToPeripheral(
-      DmaControlBlock* control_block, uint32_t src_physical,
+      volatile DmaControlBlock* control_block, uint32_t src_physical,
       uint32_t dest_physical, uint32_t length,
       DmaRegisterMap::TI::PERMAP dreq);
 
@@ -179,7 +177,7 @@ class Dma {
    * @param dreq DREQ signal mapping
    */
   static void ConfigurePeripheralToMemory(
-      DmaControlBlock* control_block, uint32_t src_physical,
+      volatile DmaControlBlock* control_block, uint32_t src_physical,
       uint32_t dest_physical, uint32_t length,
       DmaRegisterMap::TI::PERMAP dreq);
 

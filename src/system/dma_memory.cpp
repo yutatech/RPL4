@@ -147,7 +147,7 @@ void DmaMemory::FreeBlock(MemoryBlock& block) {
   }
 
   if (block.virtual_addr != nullptr && block.virtual_addr != MAP_FAILED) {
-    munmap(block.virtual_addr, block.size);
+    munmap(const_cast<void*>(block.virtual_addr), block.size);
   }
 
   if (mailbox_fd_ >= 0 && block.handle != 0) {
@@ -181,7 +181,7 @@ void DmaMemory::FreeBlock(MemoryBlock& block) {
   block.handle = 0;
 }
 
-void* DmaMemory::Allocate(size_t size) {
+volatile void* DmaMemory::Allocate(size_t size) {
   if (size == 0) {
     return nullptr;
   }
@@ -210,7 +210,7 @@ void* DmaMemory::Allocate(size_t size) {
   return new_block.virtual_addr;
 }
 
-void DmaMemory::Free(void* ptr) {
+void DmaMemory::Free(volatile void* ptr) {
   if (ptr == nullptr) {
     return;
   }
@@ -225,18 +225,18 @@ void DmaMemory::Free(void* ptr) {
   Log(LogLevel::Warning, "[DmaMemory] Attempted to free unknown pointer");
 }
 
-uint32_t DmaMemory::GetPhysicalAddress(void* virtual_addr) {
+uint32_t DmaMemory::GetPhysicalAddress(volatile void* virtual_addr) {
   if (virtual_addr == nullptr) {
     return 0;
   }
 
   for (const auto& block : blocks_) {
     if (block.in_use && block.virtual_addr <= virtual_addr &&
-        static_cast<uint8_t*>(virtual_addr) <
-            static_cast<uint8_t*>(block.virtual_addr) + block.size) {
+        static_cast<volatile uint8_t*>(virtual_addr) <
+            static_cast<volatile uint8_t*>(block.virtual_addr) + block.size) {
       size_t offset =
-          static_cast<uint8_t*>(virtual_addr) -
-          static_cast<uint8_t*>(block.virtual_addr);
+          static_cast<volatile uint8_t*>(virtual_addr) -
+          static_cast<volatile uint8_t*>(block.virtual_addr);
       return block.physical_addr + offset;
     }
   }
