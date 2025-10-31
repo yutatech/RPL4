@@ -216,7 +216,6 @@ class Pwm {
   Port port_;
   double clock_frequency_;
   static constexpr double kDefaultClockFrequency = 25000000.0;  // 25 MHz
-
 };
 
 }  // namespace rpl

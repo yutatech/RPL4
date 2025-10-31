@@ -32,6 +32,7 @@ int main(void) {
   auto& dma_memory = rpl::DmaMemory::GetInstance();
 
   // Set up PWM
+  pwm->InitializeClock(25000000); // 25 MHz clock
   constexpr double kPwmFrequency = 1000.0;  // 1 kHz
   pwm->SetFrequency(rpl::Pwm::Channel::kChannel1, kPwmFrequency);
   pwm->SetMSMode(rpl::Pwm::Channel::kChannel1, true);
