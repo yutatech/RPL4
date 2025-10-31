@@ -110,6 +110,8 @@ class Dma {
    * @brief Set control block address
    *
    * @param control_block_physical_addr Physical address of control block
+   * @note Dma::Reset() clears this setting, so if Reset() is called,
+   *       this method needs to be called again before starting transfer.
    */
   void SetControlBlockAddress(uint32_t control_block_physical_addr);
 

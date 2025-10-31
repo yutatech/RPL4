@@ -13,6 +13,8 @@ namespace rpl {
  * @details Manages allocation of physical memory for DMA operations.
  *          Uses mailbox interface to allocate uncached memory and get
  *          physical addresses.
+ * @note Due to strict memory alignment requirements, do not use memset to
+ *       assign values. Misaligned memory access may cause a bus error.
  */
 class DmaMemory {
  public:
@@ -57,9 +59,7 @@ class DmaMemory {
   template <typename T, typename... Args>
   T* AllocateObject(Args&&... args) {
     void* ptr = Allocate(sizeof(T));
-    if (ptr == nullptr) {
-      return nullptr;
-    }
+    if (ptr == nullptr) { return nullptr; }
     return new (ptr) T(std::forward<Args>(args)...);
   }
 
@@ -82,7 +82,7 @@ class DmaMemory {
 
   struct MemoryBlock {
     void* virtual_addr;
-    uint32_t physical_addr;
+    uint32_t bus_addr;
     size_t size;
     uint32_t handle;  // Mailbox handle
     bool in_use;
@@ -96,7 +96,8 @@ class DmaMemory {
   int mailbox_fd_;
   std::vector<MemoryBlock> blocks_;
   static constexpr size_t kDefaultBlockSize = 4096;  // 4KB blocks
-  static constexpr size_t kAlignment = 32;  // 32-byte alignment for DMA control blocks
+  static constexpr size_t kAlignment =
+      32;  // 32-byte alignment for DMA control blocks
 };
 
 }  // namespace rpl

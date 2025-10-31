@@ -34,6 +34,7 @@ int main(void) {
     return 1;
   }
 
+  // !! Do not use memset due to alignment requirements !!
   for (size_t i = 0; i < kBufferSize; i++) {
     // Initialize source buffer with test pattern
     src_buffer[i] = i * i;

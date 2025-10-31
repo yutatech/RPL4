@@ -32,8 +32,8 @@ int main(void) {
   auto& dma_memory = rpl::DmaMemory::GetInstance();
 
   // Set up PWM
+  pwm->InitializeClock(25000000); // 25 MHz clock
   constexpr double kPwmFrequency = 1000.0;  // 1 kHz
-  pwm->InitializeClock(25000000);  // 25 MHz clock
   pwm->SetFrequency(rpl::Pwm::Channel::kChannel1, kPwmFrequency);
   pwm->SetMSMode(rpl::Pwm::Channel::kChannel1, true);
 
@@ -42,6 +42,7 @@ int main(void) {
   pwm->ClearFifo();
 
   // Create a pattern of PWM duty cycles (sine wave)
+  // !! Do not use memset due to alignment requirements !!
   constexpr size_t kPatternSize = 1000;
   uint32_t* pattern_buffer = static_cast<uint32_t*>(
       dma_memory.Allocate(kPatternSize * sizeof(uint32_t)));

@@ -23,17 +23,6 @@ constexpr uint32_t kDma14AddressBase = 0xFEE05000;
 constexpr uint32_t kDmaRegisterSize = 0x00000100;
 constexpr uint32_t kDmaEnableAddressBase = 0xFE007FF0;
 
-// DMA Control Block structure (must be 32-byte aligned in physical memory)
-struct DmaControlBlock {
-  volatile uint32_t transfer_info;       // Transfer Information
-  volatile uint32_t source_addr;         // Source Address (physical)
-  volatile uint32_t dest_addr;           // Destination Address (physical)
-  volatile uint32_t transfer_length;     // Transfer Length
-  volatile uint32_t stride;              // 2D Mode Stride
-  volatile uint32_t next_control_block;  // Next Control Block Address (physical)
-  volatile uint32_t reserved[2];         // Reserved
-};
-
 struct DmaRegisterMap {
   /**
    * @brief DMA Control and Status
@@ -481,6 +470,17 @@ extern DmaRegisterMap* REG_DMA12;
 extern DmaRegisterMap* REG_DMA13;
 extern DmaRegisterMap* REG_DMA14;
 extern DmaEnableRegisterMap* REG_DMA_ENABLE;
+
+// DMA Control Block structure (must be 32-byte aligned in physical memory)
+struct DmaControlBlock {
+  volatile DmaRegisterMap::TI transfer_info; // Transfer Information
+  volatile uint32_t source_addr;             // Source Address (physical)
+  volatile uint32_t dest_addr;               // Destination Address (physical)
+  volatile uint32_t transfer_length;         // Transfer Length
+  volatile uint32_t stride;                  // 2D Mode Stride
+  volatile uint32_t next_control_block;      // Next Control Block Address (physical)
+  volatile uint32_t reserved[2];             // Reserved
+};
 
 }  // namespace rpl
 
