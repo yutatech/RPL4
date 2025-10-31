@@ -176,15 +176,19 @@ void Dma::ConfigureMemoryToMemory(DmaControlBlock* control_block,
     return;
   }
 
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wclass-memaccess"
   memset(control_block, 0, sizeof(DmaControlBlock));
+  #pragma GCC diagnostic pop
 
   // Configure transfer info
-  uint32_t ti = 0;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::SRC_INC::kEnable) << 8;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::DEST_INC::kEnable) << 4;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::WAIT_RESP::kEnable) << 3;
+  control_block->transfer_info.src_inc = DmaRegisterMap::TI::SRC_INC::kEnable;
+  control_block->transfer_info.dest_inc = DmaRegisterMap::TI::DEST_INC::kEnable;
+  control_block->transfer_info.wait_resp =
+      DmaRegisterMap::TI::WAIT_RESP::kEnable;
+  control_block->transfer_info.no_wide_bursts =
+      DmaRegisterMap::TI::NO_WIDE_BURSTS::kEnable;
 
-  control_block->transfer_info = ti;
   control_block->source_addr = src_physical;
   control_block->dest_addr = dest_physical;
   control_block->transfer_length = length;
@@ -200,17 +204,20 @@ void Dma::ConfigureMemoryToPeripheral(DmaControlBlock* control_block,
     return;
   }
 
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wclass-memaccess"
   memset(control_block, 0, sizeof(DmaControlBlock));
+  #pragma GCC diagnostic pop
 
   // Configure transfer info
-  uint32_t ti = 0;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::SRC_INC::kEnable) << 8;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::DEST_DREQ::kEnable) << 6;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::WAIT_RESP::kEnable) << 3;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::NO_WIDE_BURSTS::kEnable) << 26;
-  ti |= static_cast<uint32_t>(dreq) << 16;
+  control_block->transfer_info.src_inc = DmaRegisterMap::TI::SRC_INC::kEnable;
+  control_block->transfer_info.dest_dreq = DmaRegisterMap::TI::DEST_DREQ::kEnable;
+  control_block->transfer_info.wait_resp =
+      DmaRegisterMap::TI::WAIT_RESP::kEnable;
+  control_block->transfer_info.no_wide_bursts =
+      DmaRegisterMap::TI::NO_WIDE_BURSTS::kEnable;
+  control_block->transfer_info.permap = dreq;
 
-  control_block->transfer_info = ti;
   control_block->source_addr = src_physical;
   control_block->dest_addr = dest_physical;
   control_block->transfer_length = length;
@@ -226,16 +233,20 @@ void Dma::ConfigurePeripheralToMemory(DmaControlBlock* control_block,
     return;
   }
 
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wclass-memaccess"
   memset(control_block, 0, sizeof(DmaControlBlock));
+  #pragma GCC diagnostic pop
 
   // Configure transfer info
-  uint32_t ti = 0;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::DEST_INC::kEnable) << 4;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::SRC_DREQ::kEnable) << 10;
-  ti |= static_cast<uint32_t>(DmaRegisterMap::TI::WAIT_RESP::kEnable) << 3;
-  ti |= static_cast<uint32_t>(dreq) << 16;
+  control_block->transfer_info.src_dreq = DmaRegisterMap::TI::SRC_DREQ::kEnable;
+  control_block->transfer_info.dest_inc = DmaRegisterMap::TI::DEST_INC::kEnable;
+  control_block->transfer_info.wait_resp =
+      DmaRegisterMap::TI::WAIT_RESP::kEnable;
+  control_block->transfer_info.no_wide_bursts =
+      DmaRegisterMap::TI::NO_WIDE_BURSTS::kEnable;
+  control_block->transfer_info.permap = dreq;
 
-  control_block->transfer_info = ti;
   control_block->source_addr = src_physical;
   control_block->dest_addr = dest_physical;
   control_block->transfer_length = length;

@@ -118,7 +118,7 @@ bool DmaMemory::AllocateBlock(size_t size, MemoryBlock& block) {
     return false;
   }
 
-  block.physical_addr = message[5] ;  // Remove VC/ARM bit
+  block.bus_addr = message[5] ;  // Remove VC/ARM bit
 
   // Map physical memory to user space
   int mem_fd = open("/dev/mem", O_RDWR | O_SYNC);
@@ -129,7 +129,8 @@ bool DmaMemory::AllocateBlock(size_t size, MemoryBlock& block) {
 
   block.virtual_addr =
       mmap(NULL, block.size, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-           block.physical_addr& 0x3FFFFFFF);
+           block.bus_addr& 0x3FFFFFFF // bus address to physical address
+          );
   close(mem_fd);
 
   if (block.virtual_addr == MAP_FAILED) {
@@ -177,7 +178,7 @@ void DmaMemory::FreeBlock(MemoryBlock& block) {
 
   block.in_use = false;
   block.virtual_addr = nullptr;
-  block.physical_addr = 0;
+  block.bus_addr = 0;
   block.handle = 0;
 }
 
@@ -237,7 +238,7 @@ uint32_t DmaMemory::GetPhysicalAddress(void* virtual_addr) {
       size_t offset =
           static_cast<uint8_t*>(virtual_addr) -
           static_cast<uint8_t*>(block.virtual_addr);
-      return block.physical_addr + offset;
+      return block.bus_addr + offset;
     }
   }
 

@@ -82,7 +82,7 @@ class DmaMemory {
 
   struct MemoryBlock {
     void* virtual_addr;
-    uint32_t physical_addr;
+    uint32_t bus_addr;
     size_t size;
     uint32_t handle;  // Mailbox handle
     bool in_use;
