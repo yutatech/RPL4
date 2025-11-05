@@ -1,2 +1,0 @@
-/usr/bin/ar qc librpl4.a CMakeFiles/rpl4.dir/src/peripheral/aux_spi.cpp.o CMakeFiles/rpl4.dir/src/peripheral/dma.cpp.o CMakeFiles/rpl4.dir/src/peripheral/gpio.cpp.o CMakeFiles/rpl4.dir/src/peripheral/pwm.cpp.o CMakeFiles/rpl4.dir/src/peripheral/spi.cpp.o CMakeFiles/rpl4.dir/src/system/clock.cpp.o CMakeFiles/rpl4.dir/src/system/dma_memory.cpp.o CMakeFiles/rpl4.dir/src/system/log.cpp.o CMakeFiles/rpl4.dir/src/system/system.cpp.o
-/usr/bin/ranlib librpl4.a

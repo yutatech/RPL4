@@ -5,6 +5,13 @@
 
 namespace rpl {
 
+std::shared_ptr<Gpio> GpioFactory::Create(uint8_t pin) {
+  struct EnableMakeShared : public Gpio {
+    explicit EnableMakeShared(uint8_t p) : Gpio(p) {}
+  };
+  return std::make_shared<EnableMakeShared>(pin);
+}
+
 std::array<std::shared_ptr<Gpio>, Gpio::kNumOfInstances> Gpio::instances_ = {
     nullptr};
 
@@ -17,7 +24,7 @@ std::shared_ptr<Gpio> Gpio::GetInstance(uint8_t pin) {
   if (!IsInitialized()) {
     Log(LogLevel::Error, "[Gpio::GetInstance()] RPL is not initialized.");
   } else if (instances_[static_cast<size_t>(pin)] == nullptr) {
-    instances_[static_cast<size_t>(pin)] = std::shared_ptr<Gpio>(new Gpio(pin));
+    instances_[static_cast<size_t>(pin)] = GpioFactory::Create(pin);
   }
   return instances_[static_cast<size_t>(pin)];
 }

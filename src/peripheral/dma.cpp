@@ -8,6 +8,13 @@
 
 namespace rpl {
 
+std::shared_ptr<Dma> DmaFactory::Create(DmaRegisterMap* register_map, Dma::Channel channel) {
+  struct EnableMakeShared : public Dma {
+    EnableMakeShared(DmaRegisterMap* reg_map, Dma::Channel ch) : Dma(reg_map, ch) {}
+  };
+  return std::make_shared<EnableMakeShared>(register_map, channel);
+}
+
 std::array<std::shared_ptr<Dma>, Dma::kNumOfInstances> Dma::instances_ = {
     nullptr};
 
@@ -69,7 +76,7 @@ std::shared_ptr<Dma> Dma::GetInstance(Channel channel) {
         reg_map = REG_DMA14;
         break;
     }
-    instances_[index] = std::shared_ptr<Dma>(new Dma(reg_map, channel));
+    instances_[index] = DmaFactory::Create(reg_map, channel);
   }
   return instances_[index];
 }

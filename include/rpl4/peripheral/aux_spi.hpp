@@ -10,7 +10,15 @@
 
 namespace rpl {
 
-class AuxSpi : public SpiBase {
+// Forward declaration for factory
+class AuxSpi;
+
+// Helper struct to enable make_shared with private constructor
+struct AuxSpiFactory {
+  static std::shared_ptr<AuxSpi> Create(AuxSpiRegisterMap* register_map);
+};
+
+class AuxSpi : public SpiBase, public std::enable_shared_from_this<AuxSpi> {
  public:
   enum class Port : size_t {
     kAuxSpi1 = 0,
@@ -229,6 +237,9 @@ class AuxSpi : public SpiBase {
 
   void ConfigureDataShiftTx();
   void ConfigureDataShiftRx();
+
+  // Allow factory struct to access private constructor
+  friend struct AuxSpiFactory;
 };
 
 }  // namespace rpl

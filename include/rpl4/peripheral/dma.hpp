@@ -9,7 +9,9 @@
 
 namespace rpl {
 
-class Dma {
+class Dma;
+
+class Dma : public std::enable_shared_from_this<Dma> {
  public:
   enum class Channel : size_t {
     kChannel0 = 0,
@@ -191,6 +193,14 @@ class Dma {
 
   DmaRegisterMap* register_map_;
   Channel channel_;
+
+  // Allow factory struct to access private constructor
+  friend struct DmaFactory;
+};
+
+// Helper struct to enable make_shared with private constructor
+struct DmaFactory {
+  static std::shared_ptr<Dma> Create(DmaRegisterMap* register_map, Dma::Channel channel);
 };
 
 }  // namespace rpl

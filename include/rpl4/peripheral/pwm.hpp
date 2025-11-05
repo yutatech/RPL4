@@ -9,7 +9,9 @@
 
 namespace rpl {
 
-class Pwm {
+class Pwm;
+
+class Pwm : public std::enable_shared_from_this<Pwm> {
  public:
   enum class Port : size_t {
     kPwm0 = 0,
@@ -216,6 +218,14 @@ class Pwm {
   Port port_;
   double clock_frequency_;
   static constexpr double kDefaultClockFrequency = 25000000.0;  // 25 MHz
+
+  // Allow factory struct to access private constructor
+  friend struct PwmFactory;
+};
+
+// Helper struct to enable make_shared with private constructor
+struct PwmFactory {
+  static std::shared_ptr<Pwm> Create(PwmRegisterMap* register_map, Pwm::Port port);
 };
 
 }  // namespace rpl
