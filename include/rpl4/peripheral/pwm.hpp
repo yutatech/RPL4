@@ -9,8 +9,6 @@
 
 namespace rpl {
 
-class Pwm;
-
 class Pwm : public std::enable_shared_from_this<Pwm> {
  public:
   enum class Port : size_t {

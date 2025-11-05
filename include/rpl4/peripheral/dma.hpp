@@ -9,8 +9,6 @@
 
 namespace rpl {
 
-class Dma;
-
 class Dma : public std::enable_shared_from_this<Dma> {
  public:
   enum class Channel : size_t {
