@@ -166,6 +166,7 @@ struct DmaRegisterMap {
    * @brief DMA Transfer Information
    */
   struct TI {
+    TI() = default;
     TI(const volatile TI&);
     volatile TI& operator=(const volatile TI&) volatile;
     TI& operator=(const volatile TI&);
