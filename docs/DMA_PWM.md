@@ -6,6 +6,28 @@ This document describes the DMA (Direct Memory Access) and PWM (Pulse Width Modu
 
 The DMA implementation provides hardware-accelerated data transfer without CPU intervention.
 
+### DMA Engine Types
+
+The BCM2711 (Raspberry Pi 4) has three types of DMA engines, each optimized for different use cases:
+
+#### 1. Standard DMA (Channels 0-6, 8-10)
+- Full-featured DMA with 32-bit addressing
+- Supports complex transfers, 2D mode, peripheral mapping
+- Best for general-purpose DMA operations
+- Class: `rpl::Dma`
+
+#### 2. DMA Lite (Channel 7)
+- Simplified DMA with reduced features
+- Lower resource usage for basic operations
+- Best for simple memory-to-memory transfers
+- Class: `rpl::DmaLite`
+
+#### 3. DMA4 (Channels 11-14)
+- Enhanced DMA with 40-bit addressing
+- Supports full 4GB+ memory access
+- Best for systems with >1GB RAM
+- Class: `rpl::Dma4`
+
 ### Features
 
 - Support for all 15 DMA channels (0-14)
@@ -15,14 +37,18 @@ The DMA implementation provides hardware-accelerated data transfer without CPU i
 - Physical memory allocation and management
 - Control block chains for complex transfers
 - Priority and panic priority configuration
+- Compile-time dispatch (no virtual functions)
+- Shared common functionality via CRTP base class
 
-### Usage Example
+### Usage Examples
+
+#### Standard DMA (32-bit addressing)
 
 ```cpp
 #include "rpl4/peripheral/dma.hpp"
 #include "rpl4/system/dma_memory.hpp"
 
-// Get DMA instance
+// Get Standard DMA instance (channels 0-6, 8-10)
 auto dma = rpl::Dma::GetInstance(rpl::Dma::Channel::kChannel0);
 
 // Allocate physical memory
@@ -50,6 +76,32 @@ dma_memory.Free(src_buffer);
 dma_memory.Free(dst_buffer);
 ```
 
+#### DMA Lite (simplified)
+
+```cpp
+// Get DMA Lite instance (channel 7)
+auto dma = rpl::DmaLite::GetInstance(rpl::DmaLite::Channel::kChannel7);
+
+// Same API as Standard DMA, but with reduced features
+auto* cb = dma_memory.AllocateObject<rpl::DmaLiteControlBlock>();
+rpl::DmaLite::ConfigureMemoryToMemory(cb, src_phys, dst_phys, size);
+```
+
+#### DMA4 (40-bit addressing)
+
+```cpp
+// Get DMA4 instance (channels 11-14)
+auto dma = rpl::Dma4::GetInstance(rpl::Dma4::Channel::kChannel11);
+
+// DMA4 uses 64-bit addresses for 40-bit addressing support
+auto* cb = dma_memory.AllocateObject<rpl::Dma4ControlBlock>();
+rpl::Dma4::ConfigureMemoryToMemory(
+    cb,
+    static_cast<uint64_t>(src_phys),  // 40-bit source
+    static_cast<uint64_t>(dst_phys),  // 40-bit destination
+    size);
+```
+
 ### DMA Memory Management
 
 The `DmaMemory` class manages physical memory allocation:
@@ -59,12 +111,21 @@ The `DmaMemory` class manages physical memory allocation:
 - Supports typed object allocation with `AllocateObject<T>()`
 - Automatic 32-byte alignment for DMA control blocks
 
-### DMA Channels
+### DMA Channel Assignment
 
-- Channels 0-14 are available
-- Channel 15 is reserved for the system
-- Lite channels (7-10) have reduced features
+| Channel(s) | Type          | Class           | Features                                    |
+|------------|---------------|-----------------|---------------------------------------------|
+| 0-6        | Standard DMA  | `Dma`           | Full-featured, 32-bit addressing            |
+| 7          | DMA Lite      | `DmaLite`       | Simplified, reduced features                |
+| 8-10       | Standard DMA  | `Dma`           | Full-featured, 32-bit addressing            |
+| 11-14      | DMA4          | `Dma4`          | Enhanced, 40-bit addressing, >1GB RAM       |
+| 15         | DMA Lite      | Not mapped      | Reserved/not available in current impl.     |
+
+**Notes:**
 - Channel 4 is often used by the firmware
+- DMA4 channels (11-14) are recommended for systems with >1GB RAM
+- All types share common interface via `DmaBase` CRTP template
+- No virtual functions - all dispatch at compile time
 
 ## PWM (Pulse Width Modulation)
 
@@ -158,7 +219,19 @@ pwm->InitializeClock(25000000);
 
 ### dma_example.cpp
 
-Demonstrates basic DMA memory-to-memory transfer with data verification.
+Demonstrates basic DMA memory-to-memory transfer with data verification using Standard DMA.
+
+### dma_types_example.cpp
+
+**NEW:** Comprehensive example demonstrating all three DMA types:
+- Standard DMA (Channel 0) - Full-featured 32-bit DMA
+- DMA Lite (Channel 7) - Simplified DMA for basic operations
+- DMA4 (Channel 11) - Enhanced DMA with 40-bit addressing
+
+Each type performs a memory-to-memory transfer with:
+- Performance measurement and throughput calculation
+- Data verification
+- Comparison of different DMA engine capabilities
 
 ### pwm_dma_example.cpp
 
@@ -173,10 +246,43 @@ Basic PWM usage with manual duty cycle control (backward compatible).
 - [BCM2711 Peripherals Datasheet](https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf)
 - [rpi_ws281x DMA Example](https://github.com/jgarff/rpi_ws281x)
 
-## Notes
+## Architecture Notes
+
+### CRTP Design Pattern
+
+The DMA implementation uses the Curiously Recurring Template Pattern (CRTP) to:
+- Share common functionality across DMA types
+- Avoid virtual function overhead
+- Enable compile-time dispatch
+- Maintain type safety
+
+```cpp
+// Base class uses CRTP
+template <typename Derived, typename DmaTag>
+class DmaBase { ... };
+
+// Derived classes inherit from base
+class Dma : public DmaBase<Dma, StandardDmaTag> { ... };
+class DmaLite : public DmaBase<DmaLite, DmaLiteTag> { ... };
+class Dma4 : public DmaBase<Dma4, Dma4Tag> { ... };
+```
+
+### Type Traits
+
+Each DMA type has associated traits:
+```cpp
+template <typename DmaTag> struct DmaTraits;
+// Provides: RegisterMapType, ControlBlockType, kName
+```
+
+This allows compile-time customization without runtime overhead.
+
+## General Notes
 
 - DMA requires physical memory addresses, not virtual addresses
 - Control blocks must be 32-byte aligned
+- DMA4 control block addresses are shifted right by 5 (32-byte alignment)
 - PWM FIFO can hold up to 16 32-bit values
 - DMA channel availability depends on system configuration
 - Root privileges required for /dev/mem and /dev/vcio access
+- Backward compatibility maintained - existing code continues to work

@@ -31,11 +31,19 @@ DmaRegisterMap*  REG_DMA7;
 DmaRegisterMap*  REG_DMA8;
 DmaRegisterMap*  REG_DMA9;
 DmaRegisterMap*  REG_DMA10;
-DmaRegisterMap*  REG_DMA11;
-DmaRegisterMap*  REG_DMA12;
-DmaRegisterMap*  REG_DMA13;
-DmaRegisterMap*  REG_DMA14;
+// Note: Channels 11-14 are DMA4 only, not standard DMA
+DmaRegisterMap*  REG_DMA11 = nullptr;
+DmaRegisterMap*  REG_DMA12 = nullptr;
+DmaRegisterMap*  REG_DMA13 = nullptr;
+DmaRegisterMap*  REG_DMA14 = nullptr;
 DmaEnableRegisterMap* REG_DMA_ENABLE;
+DmaLiteRegisterMap* REG_DMA_LITE7;
+// Note: Channel 15 is not available in BCM2711
+DmaLiteRegisterMap* REG_DMA_LITE15 = nullptr;
+Dma4RegisterMap* REG_DMA4_11;
+Dma4RegisterMap* REG_DMA4_12;
+Dma4RegisterMap* REG_DMA4_13;
+Dma4RegisterMap* REG_DMA4_14;
 GpioRegisterMap* REG_GPIO;
 PwmRegisterMap*  REG_PWM0;
 PwmRegisterMap*  REG_PWM1;
@@ -105,10 +113,16 @@ uint8_t Init(void){
     REG_DMA8 = reinterpret_cast<DmaRegisterMap*>(region0 + (kDma8AddressBase - region0_base) / 4);
     REG_DMA9 = reinterpret_cast<DmaRegisterMap*>(region0 + (kDma9AddressBase - region0_base) / 4);
     REG_DMA10 = reinterpret_cast<DmaRegisterMap*>(region0 + (kDma10AddressBase - region0_base) / 4);
-    REG_DMA11 = reinterpret_cast<DmaRegisterMap*>(region0 + (kDma11AddressBase - region0_base) / 4);
-    REG_DMA12 = reinterpret_cast<DmaRegisterMap*>(region0 + (kDma12AddressBase - region0_base) / 4);
-    REG_DMA13 = reinterpret_cast<DmaRegisterMap*>(region0 + (kDma13AddressBase - region0_base) / 4);
+    // Channels 11-14 are DMA4 only, mapped separately below
     REG_DMA_ENABLE = reinterpret_cast<DmaEnableRegisterMap*>(region0 + (kDmaEnableAddressBase - region0_base) / 4);
+    
+    // DMA Lite channel 7 uses same register map as standard DMA
+    REG_DMA_LITE7 = reinterpret_cast<DmaLiteRegisterMap*>(region0 + (kDma7AddressBase - region0_base) / 4);
+    
+    // DMA4 channels (11-14) have different register map (not standard DMA)
+    REG_DMA4_11 = reinterpret_cast<Dma4RegisterMap*>(region0 + (kDma11AddressBase - region0_base) / 4);
+    REG_DMA4_12 = reinterpret_cast<Dma4RegisterMap*>(region0 + (kDma12AddressBase - region0_base) / 4);
+    REG_DMA4_13 = reinterpret_cast<Dma4RegisterMap*>(region0 + (kDma13AddressBase - region0_base) / 4);
 
     constexpr static uint32_t region1_base = 0xfe101000;
     constexpr static uint32_t region1_size = 0x1000;
@@ -195,7 +209,9 @@ uint8_t Init(void){
         close(fd);
         return -1;
     }
-    REG_DMA14 = reinterpret_cast<DmaRegisterMap*>(region7 + (kDma14AddressBase - region7_base) / 4);
+    // Channel 14 is DMA4 only (not standard DMA)
+    REG_DMA4_14 = reinterpret_cast<Dma4RegisterMap*>(region7 + (kDma14AddressBase - region7_base) / 4);
+    // Note: Channel 15 (DMA Lite) is not available/mapped in BCM2711
 
     system_initialized = true;
     close(fd);
