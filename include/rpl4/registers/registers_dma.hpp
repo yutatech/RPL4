@@ -483,6 +483,49 @@ struct DmaControlBlock {
   volatile uint32_t reserved[2];             // Reserved
 };
 
+// DMA Lite uses the same register map as standard DMA but with reduced functionality
+// Channels 7 and 15 are DMA Lite
+using DmaLiteRegisterMap = DmaRegisterMap;
+using DmaLiteControlBlock = DmaControlBlock;
+
+extern DmaLiteRegisterMap* REG_DMA_LITE7;
+extern DmaLiteRegisterMap* REG_DMA_LITE15;
+
+// DMA4 Register Map (Channels 11-14) - Enhanced DMA with 40-bit addressing
+struct Dma4RegisterMap {
+  volatile DmaRegisterMap::CS cs;                // 0x00 - Control and Status (same as standard DMA)
+  volatile uint32_t cb_addr;                     // 0x04 - Control Block Address (bits 39:5)
+  volatile DmaRegisterMap::DEBUG debug;          // 0x08 - Debug
+  volatile uint32_t ti;                          // 0x0C - Transfer Information (read-only, from CB)
+  volatile uint32_t src_addr;                    // 0x10 - Source Address (read-only, from CB)
+  volatile uint32_t srci;                        // 0x14 - Source Information (upper 8 bits for 40-bit)
+  volatile uint32_t dst_addr;                    // 0x18 - Dest Address (read-only, from CB)
+  volatile uint32_t dsti;                        // 0x1C - Dest Information (upper 8 bits for 40-bit)
+  volatile uint32_t len;                         // 0x20 - Transfer Length (read-only, from CB)
+  volatile uint32_t next_cb;                     // 0x24 - Next CB Address (read-only, from CB)
+  volatile uint32_t debug2;                      // 0x28 - Extended Debug
+  volatile uint32_t reserved[53];                // 0x2C-0xFF
+};
+
+// DMA4 Control Block structure (must be 32-byte aligned in physical memory)
+// Note: 40-bit addresses are split into addr (lower 32 bits) and info (upper 8 bits)
+struct Dma4ControlBlock {
+  volatile DmaRegisterMap::TI transfer_info;     // 0x00 - Transfer Information
+  volatile uint32_t source_addr;                 // 0x04 - Source Address (lower 32 bits)
+  volatile uint32_t source_info;                 // 0x08 - Source Info (bits 39:32 in lower byte)
+  volatile uint32_t dest_addr;                   // 0x0C - Destination Address (lower 32 bits)
+  volatile uint32_t dest_info;                   // 0x10 - Dest Info (bits 39:32 in lower byte)
+  volatile uint32_t transfer_length;             // 0x14 - Transfer Length
+  volatile uint32_t stride;                      // 0x18 - 2D Mode Stride
+  volatile uint32_t next_control_block;          // 0x1C - Next CB Address (bits 39:5, shifted right by 5)
+  volatile uint32_t reserved[2];                 // 0x20-0x27 - Reserved
+};
+
+extern Dma4RegisterMap* REG_DMA4_11;
+extern Dma4RegisterMap* REG_DMA4_12;
+extern Dma4RegisterMap* REG_DMA4_13;
+extern Dma4RegisterMap* REG_DMA4_14;
+
 }  // namespace rpl
 
 #endif  // RPL4_REGISTERS_DMA_HPP_
