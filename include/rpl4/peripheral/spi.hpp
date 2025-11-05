@@ -9,7 +9,15 @@
 
 namespace rpl {
 
-class Spi : public SpiBase {
+// Forward declaration for factory
+class Spi;
+
+// Helper struct to enable make_shared with private constructor
+struct SpiFactory {
+  static std::shared_ptr<Spi> Create(SpiRegisterMap* register_map);
+};
+
+class Spi : public SpiBase, public std::enable_shared_from_this<Spi> {
  public:
   enum class Port : size_t {
     kSpi0 = 0,
@@ -221,6 +229,9 @@ class Spi : public SpiBase {
   static std::array<std::shared_ptr<Spi>, kNumOfInstances> instances_;
 
   SpiRegisterMap* register_map_;
+
+  // Allow factory struct to access private constructor
+  friend struct SpiFactory;
 };
 
 }  // namespace rpl

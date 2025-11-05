@@ -7,7 +7,15 @@
 
 namespace rpl {
 
-class Gpio {
+// Forward declaration for factory
+class Gpio;
+
+// Helper struct to enable make_shared with private constructor
+struct GpioFactory {
+  static std::shared_ptr<Gpio> Create(uint8_t pin);
+};
+
+class Gpio : public std::enable_shared_from_this<Gpio> {
  public:
   /**
    * @brief Resistor Select
@@ -109,6 +117,9 @@ class Gpio {
   static std::array<std::shared_ptr<Gpio>, kNumOfInstances> instances_;
 
   uint8_t pin_;
+
+  // Allow factory struct to access private constructor
+  friend struct GpioFactory;
 };
 
 }  // namespace rpl

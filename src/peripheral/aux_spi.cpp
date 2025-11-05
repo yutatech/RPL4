@@ -8,6 +8,13 @@
 
 namespace rpl {
 
+std::shared_ptr<AuxSpi> AuxSpiFactory::Create(AuxSpiRegisterMap* register_map) {
+  struct EnableMakeShared : public AuxSpi {
+    explicit EnableMakeShared(AuxSpiRegisterMap* reg_map) : AuxSpi(reg_map) {}
+  };
+  return std::make_shared<EnableMakeShared>(register_map);
+}
+
 std::array<std::shared_ptr<AuxSpi>, AuxSpi::kNumOfInstances>
     AuxSpi::instances_ = {nullptr};
 
@@ -17,12 +24,10 @@ std::shared_ptr<AuxSpi> AuxSpi::GetInstance(Port port) {
   } else if (instances_[static_cast<size_t>(port)] == nullptr) {
     switch (port) {
       case Port::kAuxSpi1:
-        instances_[static_cast<size_t>(port)] =
-            std::shared_ptr<AuxSpi>(new AuxSpi(REG_SPI1));
+        instances_[static_cast<size_t>(port)] = AuxSpiFactory::Create(REG_SPI1);
         break;
       case Port::kAuxSpi2:
-        instances_[static_cast<size_t>(port)] =
-            std::shared_ptr<AuxSpi>(new AuxSpi(REG_SPI2));
+        instances_[static_cast<size_t>(port)] = AuxSpiFactory::Create(REG_SPI2);
         break;
       default:
         Log(LogLevel::Fatal,

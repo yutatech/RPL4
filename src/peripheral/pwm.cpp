@@ -6,6 +6,13 @@
 
 namespace rpl {
 
+std::shared_ptr<Pwm> PwmFactory::Create(PwmRegisterMap* register_map, Pwm::Port port) {
+  struct EnableMakeShared : public Pwm {
+    EnableMakeShared(PwmRegisterMap* reg_map, Pwm::Port p) : Pwm(reg_map, p) {}
+  };
+  return std::make_shared<EnableMakeShared>(register_map, port);
+}
+
 std::array<std::shared_ptr<Pwm>, Pwm::kNumOfInstances> Pwm::instances_ = {
     nullptr};
 
@@ -28,7 +35,7 @@ std::shared_ptr<Pwm> Pwm::GetInstance(Port port) {
         reg_map = REG_PWM1;
         break;
     }
-    instances_[index] = std::shared_ptr<Pwm>(new Pwm(reg_map, port));
+    instances_[index] = PwmFactory::Create(reg_map, port);
   }
   return instances_[index];
 }

@@ -8,6 +8,13 @@
 
 namespace rpl {
 
+std::shared_ptr<Spi> SpiFactory::Create(SpiRegisterMap* register_map) {
+  struct EnableMakeShared : public Spi {
+    explicit EnableMakeShared(SpiRegisterMap* reg_map) : Spi(reg_map) {}
+  };
+  return std::make_shared<EnableMakeShared>(register_map);
+}
+
 std::array<std::shared_ptr<Spi>, Spi::kNumOfInstances> Spi::instances_ = {
     nullptr};
 
@@ -17,24 +24,19 @@ std::shared_ptr<Spi> Spi::GetInstance(Port port) {
   } else if (instances_[static_cast<size_t>(port)] == nullptr) {
     switch (port) {
       case Port::kSpi0:
-        instances_[static_cast<size_t>(port)] =
-            std::shared_ptr<Spi>(new Spi(REG_SPI0));
+        instances_[static_cast<size_t>(port)] = SpiFactory::Create(REG_SPI0);
         break;
       case Port::kSpi3:
-        instances_[static_cast<size_t>(port)] =
-            std::shared_ptr<Spi>(new Spi(REG_SPI3));
+        instances_[static_cast<size_t>(port)] = SpiFactory::Create(REG_SPI3);
         break;
       case Port::kSpi4:
-        instances_[static_cast<size_t>(port)] =
-            std::shared_ptr<Spi>(new Spi(REG_SPI4));
+        instances_[static_cast<size_t>(port)] = SpiFactory::Create(REG_SPI4);
         break;
       case Port::kSpi5:
-        instances_[static_cast<size_t>(port)] =
-            std::shared_ptr<Spi>(new Spi(REG_SPI5));
+        instances_[static_cast<size_t>(port)] = SpiFactory::Create(REG_SPI5);
         break;
       case Port::kSpi6:
-        instances_[static_cast<size_t>(port)] =
-            std::shared_ptr<Spi>(new Spi(REG_SPI6));
+        instances_[static_cast<size_t>(port)] = SpiFactory::Create(REG_SPI6);
         break;
       default:
         Log(LogLevel::Fatal,
